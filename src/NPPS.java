@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,9 +17,11 @@ public class NPPS extends JFrame
     private JComboBox rodComboBox;
     private JLabel fuelRodLabel;
     private JLabel rodLevelLabel;
+    private JLabel waterImg;
     private JSlider rodSlider;
     private int sliderValue;
     private RodService rodService;
+    private ReactorService reactorService;
     private  JLabel fuelRod0;
     private  JLabel fuelRod1;
     private  JLabel fuelRod2;
@@ -27,7 +30,8 @@ public class NPPS extends JFrame
     private  JLabel fuelRod5;
     private  JLabel controlRods;
     private  JLabel tempLabel;
-    private int tempValue;
+    private double tempValue;
+    private int timerDelay = 1000;
 
     public NPPS(String name)
     {
@@ -36,6 +40,7 @@ public class NPPS extends JFrame
         setPreferredSize(new Dimension(1440, 900));
         rodService = RodService.GetInstance();
         CreateRods();
+        reactorService = ReactorService.GetInstance();
     }
 
     private void CreateRods()
@@ -105,8 +110,11 @@ public class NPPS extends JFrame
         gaugePanel.setBounds(1000, 0, 440, 900);
 
         rodComboBox = new JComboBox(new RodModel[]
-        { rodService.GetRod(RodModelStyle.ControlRod), rodService.GetRod(RodModelStyle.FuelRod),
-                rodService.GetRod(RodModelStyle.Moderator) });
+        {  
+            rodService.GetRod(RodModelStyle.ControlRod), 
+            rodService.GetRod(RodModelStyle.FuelRod),
+            rodService.GetRod(RodModelStyle.Moderator) 
+        });
 
         selectedRod = rodService.GetRod(RodModelStyle.ControlRod);
         rodComboBox.setSelectedItem(selectedRod.GetRodName());
@@ -143,53 +151,64 @@ public class NPPS extends JFrame
         controlsPanel.add(rodSlider);
 
         var img = ImageIO.read(new File("./Images/case.png"));
-        JLabel picLabel = new JLabel(new ImageIcon(img));
-        picLabel.setBounds(0, 0, 1000, 600);
-        picLabel.setVisible(true);
+        JLabel reactor = new JLabel(new ImageIcon(img));
+        reactor.setBounds(0, 0, 1000, 600);
+        reactor.setVisible(true);
 
-        var imgCold = ImageIO.read(new File("./Images/water00Cold.png"));
-        JLabel picLabel3 = new JLabel(new ImageIcon(imgCold));
-        picLabel3.setBounds(0, 0, 1000, 600);
-        picLabel3.setVisible(true);
+        var imgCold = ImageIO.read(new File("./Images/water00.png"));
+        waterImg = new JLabel(new ImageIcon(imgCold));
+        waterImg.setBounds(0, 0, 1000, 600);
+        waterImg.setVisible(true);
 
         var fuelRodImg0 = ImageIO.read(new File("./Images/fuelRod0.png"));
         fuelRod0 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod0.setBounds(0, 0, 1000, sliderValue*6);
+        fuelRod0.setBounds(0, 132, 1000, sliderValue*3);
         fuelRod0.setVisible(true);
 
         fuelRod1 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod1.setBounds(0, 0, 1060, sliderValue*6);
+        fuelRod1.setBounds(0, 132, 1060, sliderValue*3);
         fuelRod1.setVisible(true);
 
         fuelRod2 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod2.setBounds(0, 0, 1120, sliderValue*6);
+        fuelRod2.setBounds(0, 132, 1120, sliderValue*3);
         fuelRod2.setVisible(true);
 
         fuelRod3 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod3.setBounds(0, 0, 1180, sliderValue*6);
+        fuelRod3.setBounds(0, 132, 1180, sliderValue*3);
         fuelRod3.setVisible(true);
 
         fuelRod4 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod4.setBounds(0, 0, 1240, sliderValue*6);
+        fuelRod4.setBounds(0, 132, 1240, sliderValue*3);
         fuelRod4.setVisible(true);
 
         fuelRod5 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod5.setBounds(0, 0, 1300, sliderValue*6);
+        fuelRod5.setBounds(0, 132, 1300, sliderValue*3);
         fuelRod5.setVisible(true);
 
         var controlrodsImg = ImageIO.read(new File("./Images/controlRods.png"));
         controlRods = new JLabel(new ImageIcon(controlrodsImg));
-        controlRods.setBounds(0, 0, 1000, sliderValue*6);
+        controlRods.setBounds(0, 132, 1000, sliderValue*3);
         controlRods.setVisible(true);
 
         tempLabel = new JLabel("Temperature: " + tempValue + " °C");
         gaugePanel.add(tempLabel);
 
-        Timer timer = new Timer(1000, e -> {TimerAction(e);});
+        Timer timer = new Timer(timerDelay, e -> 
+        {
+            try
+                {
+                    TimerAction(e);
+                } 
+                catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                }
+        });
+
         timer.start();
 
-        viewPanelLayerd.add(picLabel, BorderLayout.CENTER, 1);
-        viewPanelLayerd.add(picLabel3, BorderLayout.CENTER, 2);
+        viewPanelLayerd.add(reactor, BorderLayout.CENTER, 1);
+        viewPanelLayerd.add(waterImg, BorderLayout.CENTER, 2);
         viewPanelLayerd.add(fuelRod0, BorderLayout.CENTER, 0);
         viewPanelLayerd.add(fuelRod1, BorderLayout.CENTER, 0);
         viewPanelLayerd.add(fuelRod2, BorderLayout.CENTER, 0);
@@ -203,43 +222,41 @@ public class NPPS extends JFrame
         contentPane.add(viewPanelLayerd);
     }
 
-    private void TimerAction(ActionEvent e)
+    private void TimerAction(ActionEvent e) throws IOException
     {
-        int add = 0;
+        double add = 0;
+        add = reactorService.Calculate();
+        tempValue += add;
         tempLabel.setText("Temperature: " + tempValue + " °C");
 
-        // count how many fuelrods are above 30%
-        var fuelRodCount = rodService.CountFuelRodsAbove(30);
+        SetWaterTemp();
+    }
 
-        if (fuelRodCount > 0) 
-        {
-            switch (fuelRodCount) {
-                case 1:
-                    add = 1;
-                    break;
-                case 2:
-                    add = 2;
-                    break;
-                case 3:
-                    add = 3;
-                    break;
-                case 4:
-                    add = 4;
-                    break;
-                case 5:
-                    add = 5;
-                    break;
-                case 6:
-                    add = 6;
-                    break;
-            }
-        }
-        else
-        {
+    private void SetWaterTemp() throws IOException
+    {
 
+        BufferedImage imgWater = null;
+        if(tempValue >=0 && tempValue <=99)
+        {
+            imgWater = ImageIO.read(new File("./Images/water00.png"));
         }
 
-        tempValue += add;
+        if(tempValue >=100 && tempValue <=749)
+        {
+            imgWater = ImageIO.read(new File("./Images/water01.png"));
+        }
+
+        if(tempValue >=750 && tempValue <=999)
+        {
+            imgWater = ImageIO.read(new File("./Images/water02.png"));
+        }
+
+        if(tempValue >=1000)
+        {
+            imgWater = ImageIO.read(new File("./Images/water03.png"));
+        }
+
+        waterImg.setIcon(new ImageIcon(imgWater));
     }
 
     private void FuelRodComboBoxChange(ActionEvent e)
@@ -261,32 +278,37 @@ public class NPPS extends JFrame
         switch (selectedRod.GetRodStyle())
         {
             case ControlRod:
-                controlRods.setBounds(0, 0, 1000, sliderValue*6);
+                controlRods.setBounds(0, 132, 1000, sliderValue*3);
                 break;
             case FuelRod:
                 if(selectedRod.GetRodName().equals("1"))
                 {
-                    fuelRod0.setBounds(0, 0, 1000, sliderValue*6);
+                    fuelRod0.setBounds(0, 132, 1000, sliderValue*3);
                 }
+
                 if(selectedRod.GetRodName().equals("2"))
                 {
-                    fuelRod1.setBounds(0, 0, 1060, sliderValue*6);
+                    fuelRod1.setBounds(0, 132, 1060, sliderValue*3);
                 }
+
                 if(selectedRod.GetRodName().equals("3"))
                 {
-                    fuelRod2.setBounds(0, 0, 1120, sliderValue*6);
+                    fuelRod2.setBounds(0, 132, 1120, sliderValue*3);
                 }
+
                 if(selectedRod.GetRodName().equals("4"))
                 {
-                    fuelRod3.setBounds(0, 0, 1180, sliderValue*6);
+                    fuelRod3.setBounds(0, 132, 1180, sliderValue*3);
                 }
+
                 if(selectedRod.GetRodName().equals("5"))
                 {
-                    fuelRod4.setBounds(0, 0, 1240, sliderValue*6);
+                    fuelRod4.setBounds(0, 132, 1240, sliderValue*3);
                 }
+
                 if(selectedRod.GetRodName().equals("6"))
                 {
-                    fuelRod5.setBounds(0, 0, 1300, sliderValue*6);
+                    fuelRod5.setBounds(0, 132, 1300, sliderValue*3);
                 }
                 break;
             case Moderator:
