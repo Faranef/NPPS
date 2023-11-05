@@ -22,37 +22,34 @@ public class ReactorService
 
     public double Calculate()
     {
-        int amount = 0;
-        var fuelRodCount = rodService.CountFuelRodsAbove(30);
+        double amount = 0;
+        double amountAbove = 0;
+        double amountUnder = 0;
+        var fuelRods = rodService.GetRod(RodModelStyle.FuelRod);
+        var controlRod = rodService.GetRod(RodModelStyle.ControlRod);
+        amountUnder = controlRod.GetRodLevel() * 6;
         
-        if (fuelRodCount > 0) 
+        for (var fuelRod : fuelRods.GetRodModelList()) 
         {
-            switch (fuelRodCount) 
-            {
-                case 1:
-                    amount = 1;
-                    break;
-                case 2:
-                    amount = 2;
-                    break;
-                case 3:
-                    amount = 3;
-                    break;
-                case 4:
-                    amount = 4;
-                    break;
-                case 5:
-                    amount = 5;
-                    break;
-                case 6:
-                    amount = 6;
-                    break;
-            }
+            // if (fuelRod.GetRodLevel() > controlRod.GetRodLevel()) 
+            // {
+            //     amountAbove += fuelRod.GetRodLevel() - controlRod.GetRodLevel();
+            // }    
+            amountAbove += fuelRod.GetRodLevel();
+            
+            // if (fuelRod.GetRodLevel() < controlRod.GetRodLevel()) 
+            // {
+            //     amountUnder +=  controlRod.GetRodLevel() - fuelRod.GetRodLevel();
+            // }  
         }
-        else
-        {
 
-        }
+        // if (amountAbove <= 0) 
+        // {
+        //     amountUnder = 0;
+        // }
+
+        amount = amountAbove - amountUnder;
+            
         return amount;
     }
 

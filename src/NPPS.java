@@ -45,13 +45,13 @@ public class NPPS extends JFrame
 
     private void CreateRods()
     {
-        RodModel rod = new RodModel(30, "Control Rod", RodModelStyle.ControlRod);
+        RodModel rod = new RodModel(100, "Control Rod", RodModelStyle.ControlRod);
         rodService.AddRodToList(rod);
 
-        rod = new RodModel(30, "Fuel Rod", RodModelStyle.FuelRod, CreateFuelRods());
+        rod = new RodModel(0, "Fuel Rod", RodModelStyle.FuelRod, CreateFuelRods());
         rodService.AddRodToList(rod);
 
-        rod = new RodModel(30, "Moderator", RodModelStyle.Moderator);
+        rod = new RodModel(0, "Moderator", RodModelStyle.Moderator);
         rodService.AddRodToList(rod);
     }
 
@@ -61,7 +61,7 @@ public class NPPS extends JFrame
 
         for (int i = 1; i < 7; i++)
         {
-            RodModel rod = new RodModel(30, Integer.toString(i), RodModelStyle.FuelRod);
+            RodModel rod = new RodModel(0, Integer.toString(i), RodModelStyle.FuelRod);
             list.add(rod);
         }
 
@@ -162,27 +162,27 @@ public class NPPS extends JFrame
 
         var fuelRodImg0 = ImageIO.read(new File("./Images/fuelRod0.png"));
         fuelRod0 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod0.setBounds(0, 132, 1000, sliderValue*3);
+        fuelRod0.setBounds(0, 132, 1000, 0);
         fuelRod0.setVisible(true);
 
         fuelRod1 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod1.setBounds(0, 132, 1060, sliderValue*3);
+        fuelRod1.setBounds(0, 132, 1060, 0);
         fuelRod1.setVisible(true);
 
         fuelRod2 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod2.setBounds(0, 132, 1120, sliderValue*3);
+        fuelRod2.setBounds(0, 132, 1120, 0);
         fuelRod2.setVisible(true);
 
         fuelRod3 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod3.setBounds(0, 132, 1180, sliderValue*3);
+        fuelRod3.setBounds(0, 132, 1180, 0);
         fuelRod3.setVisible(true);
 
         fuelRod4 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod4.setBounds(0, 132, 1240, sliderValue*3);
+        fuelRod4.setBounds(0, 132, 1240, 0);
         fuelRod4.setVisible(true);
 
         fuelRod5 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod5.setBounds(0, 132, 1300, sliderValue*3);
+        fuelRod5.setBounds(0, 132, 1300, 0);
         fuelRod5.setVisible(true);
 
         var controlrodsImg = ImageIO.read(new File("./Images/controlRods.png"));
@@ -226,32 +226,50 @@ public class NPPS extends JFrame
     {
         double add = 0;
         add = reactorService.Calculate();
-        tempValue += add;
+
+        if (tempValue <= 0 && add <= 0) 
+        {
+            tempValue = 0;
+        }
+        else
+        {
+            // check if tempValue will go below 0
+
+            if (tempValue + add <= 0) 
+            {
+                tempValue = 0;
+            }
+            else
+            {
+                tempValue += add;
+            }
+        }
+
         tempLabel.setText("Temperature: " + tempValue + " °C");
 
-        SetWaterTemp();
+        SetWaterTempImg();
     }
 
-    private void SetWaterTemp() throws IOException
+    private void SetWaterTempImg() throws IOException
     {
-
         BufferedImage imgWater = null;
-        if(tempValue >=0 && tempValue <=99)
+
+        if(tempValue <=99)
         {
             imgWater = ImageIO.read(new File("./Images/water00.png"));
         }
 
-        if(tempValue >=100 && tempValue <=749)
+        if(tempValue >=100 && tempValue <=449)
         {
             imgWater = ImageIO.read(new File("./Images/water01.png"));
         }
 
-        if(tempValue >=750 && tempValue <=999)
+        if(tempValue >=450 && tempValue <=849)
         {
             imgWater = ImageIO.read(new File("./Images/water02.png"));
         }
 
-        if(tempValue >=1000)
+        if(tempValue >=850)
         {
             imgWater = ImageIO.read(new File("./Images/water03.png"));
         }
@@ -320,24 +338,25 @@ public class NPPS extends JFrame
     private void RodComboBoxAction(ActionEvent e)
     {
         selectedRod = (RodModel) ((JComboBox) e.getSource()).getSelectedItem();
-        sliderValue = selectedRod.GetRodLevel();
-        rodSlider.setValue(sliderValue);
-
+        
         switch (selectedRod.GetRodStyle())
         {
             case ControlRod:
-                fuelRodComboBox.setVisible(false);
-                fuelRodLabel.setVisible(false);
-                break;
+            fuelRodComboBox.setVisible(false);
+            fuelRodLabel.setVisible(false);
+            break;
             case FuelRod:
-                selectedRod = selectedRod.GetRodModelList().get(0);
-                fuelRodComboBox.setVisible(true);
-                fuelRodLabel.setVisible(true);
-                break;
+            selectedRod = selectedRod.GetRodModelList().get(0);
+            fuelRodComboBox.setVisible(true);
+            fuelRodLabel.setVisible(true);
+            break;
             case Moderator:
-                fuelRodComboBox.setVisible(false);
-                fuelRodLabel.setVisible(false);
-                break;
+            fuelRodComboBox.setVisible(false);
+            fuelRodLabel.setVisible(false);
+            break;
         }
+        
+        sliderValue = selectedRod.GetRodLevel();
+        rodSlider.setValue(sliderValue);
     }
 }
