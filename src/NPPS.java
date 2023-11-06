@@ -22,15 +22,19 @@ public class NPPS extends JFrame
     private int sliderValue;
     private RodService rodService;
     private ReactorService reactorService;
-    private  JLabel fuelRod0;
-    private  JLabel fuelRod1;
-    private  JLabel fuelRod2;
-    private  JLabel fuelRod3;
-    private  JLabel fuelRod4;
-    private  JLabel fuelRod5;
-    private  JLabel controlRods;
-    private  JLabel tempLabel;
+    private JLabel fuelRod0;
+    private JLabel fuelRod1;
+    private JLabel fuelRod2;
+    private JLabel fuelRod3;
+    private JLabel fuelRod4;
+    private JLabel fuelRod5;
+    private JLabel controlRods;
+    private JLabel tempLabel;
+    private JLabel elecLabel;
+    private JProgressBar tempBar;
+    private JDialog dialog;
     private double tempValue;
+    private double wattValue;
     private int timerDelay = 1000;
 
     public NPPS(String name)
@@ -61,7 +65,7 @@ public class NPPS extends JFrame
 
         for (int i = 1; i < 7; i++)
         {
-            RodModel rod = new RodModel(0, Integer.toString(i), RodModelStyle.FuelRod);
+            RodModel rod = new RodModel(0, Integer.toString(i), RodModelStyle.FuelRod, 100000);
             list.add(rod);
         }
 
@@ -108,6 +112,7 @@ public class NPPS extends JFrame
         JPanel gaugePanel = new JPanel();
         gaugePanel.setBackground(new Color(151, 166, 176));
         gaugePanel.setBounds(1000, 0, 440, 900);
+        gaugePanel.setLayout(new BoxLayout(gaugePanel, BoxLayout.Y_AXIS));
 
         rodComboBox = new JComboBox(new RodModel[]
         {  
@@ -191,7 +196,18 @@ public class NPPS extends JFrame
         controlRods.setVisible(true);
 
         tempLabel = new JLabel("Temperature: " + tempValue + " °C");
-        gaugePanel.add(tempLabel);
+        tempLabel.setFont(new Font(tempLabel.getName(), Font.PLAIN, 24));
+        gaugePanel.add(tempLabel, BorderLayout.CENTER);
+
+        tempBar = new JProgressBar (0,100);
+        tempBar.setPreferredSize( new Dimension (100, 25));
+        gaugePanel.add(tempBar);
+
+        elecLabel = new JLabel("Wattage: " + wattValue + " W");
+        elecLabel.setFont(new Font(elecLabel.getName(), Font.PLAIN, 24));
+        gaugePanel.add(elecLabel, BorderLayout.CENTER);
+
+
 
         Timer timer = new Timer(timerDelay, e -> 
         {
@@ -233,8 +249,6 @@ public class NPPS extends JFrame
         }
         else
         {
-            // check if tempValue will go below 0
-
             if (tempValue + add <= 0) 
             {
                 tempValue = 0;
@@ -248,6 +262,63 @@ public class NPPS extends JFrame
         tempLabel.setText("Temperature: " + tempValue + " °C");
 
         SetWaterTempImg();
+        SetLabelColour();
+        SetTempBar();
+    }
+
+    private void SetTempBar()
+    {
+        tempBar.setValue(((int)tempValue)/10);
+    }
+
+    private void SetLabelColour()
+    {
+        if(tempValue >= 750)
+        {
+            tempBar.setForeground(Color.orange);
+        }
+        
+        if(tempValue >= 900)
+        {
+            tempBar.setForeground(Color.red);
+        }
+        
+        if(tempValue >= 1000)
+        {
+            tempLabel.setForeground(Color.red);
+        }
+        else
+        {
+            tempLabel.setForeground(Color.black);
+        }
+
+        if (tempValue >= 1500) 
+        {
+            ShowDialog();
+        }
+        
+        if(tempValue <=749)
+        {
+            tempBar.setForeground(Color.black);
+        }
+    }
+
+    private void ShowDialog()
+    {
+        if (dialog == null || !dialog.isVisible()) 
+        {
+            dialog = new JDialog(this, "Warning!", false); // Set non-modal to interact with main window
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setSize(250, 50);
+            JLabel label = new JLabel("Warning Temperatur is getting too high!");
+            label.setForeground(Color.red);
+            label.setFont(new Font(label.getName(), Font.PLAIN, 24));
+            dialog.add(label,BorderLayout.CENTER);
+    
+            dialog.pack();
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
+        }
     }
 
     private void SetWaterTempImg() throws IOException

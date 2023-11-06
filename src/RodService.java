@@ -60,4 +60,16 @@ public class RodService
 
         return count;
     }
+
+    public void FuelRodDecay()
+    {
+        Optional<RodModel> fuelRod = rodList.stream().filter(x -> x.GetRodStyle() == RodModelStyle.FuelRod).findFirst();
+
+        for (RodModel rodModel : fuelRod.get().GetRodModelList()) 
+        {
+            var rodLevel = rodModel.GetRodLevel();
+            var decay = rodLevel * 1.0025;
+            rodModel.SetLifeSpan(rodModel.GetLifeSpan() - decay);
+        }
+    }
 }

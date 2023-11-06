@@ -3,6 +3,7 @@ import java.util.*;
 public class RodModel
 {
     private int RodLevel;
+    private double LifeSpan;
     private String RodName;
     private RodModelStyle Style;
     private List<RodModel> RodModelList = new ArrayList<RodModel>();
@@ -27,11 +28,29 @@ public class RodModel
         RodLevel = rodLevel;
     }
 
+    public double GetLifeSpan()
+    {
+        return LifeSpan;
+    }
+
+    public void SetLifeSpan(double lifeSpan)
+    {
+        LifeSpan = lifeSpan;
+    }
+    
     public RodModel(int rodLevel, String rodName, RodModelStyle style)
     {
         RodLevel = rodLevel;
         RodName = rodName;
         Style = style;
+    }
+
+    public RodModel(int rodLevel, String rodName, RodModelStyle style, double lifeSpan)
+    {
+        RodLevel = rodLevel;
+        RodName = rodName;
+        Style = style;
+        LifeSpan = lifeSpan;
     }
 
     public RodModel(int rodLevel, String rodName, RodModelStyle style, List<RodModel> rodModelList)
