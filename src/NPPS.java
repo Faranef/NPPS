@@ -28,14 +28,27 @@ public class NPPS extends JFrame
     private JLabel fuelRod3;
     private JLabel fuelRod4;
     private JLabel fuelRod5;
+    private JLabel fuelRodEnergy0;
+    private JLabel fuelRodEnergy1;
+    private JLabel fuelRodEnergy2;
+    private JLabel fuelRodEnergy3;
+    private JLabel fuelRodEnergy4;
+    private JLabel fuelRodEnergy5;
     private JLabel controlRods;
     private JLabel tempLabel;
     private JLabel elecLabel;
     private JProgressBar tempBar;
+    private JProgressBar fuelRodBar0;
+    private JProgressBar fuelRodBar1;
+    private JProgressBar fuelRodBar2;
+    private JProgressBar fuelRodBar3;
+    private JProgressBar fuelRodBar4;
+    private JProgressBar fuelRodBar5;
     private JDialog dialog;
     private double tempValue;
     private double wattValue;
     private int timerDelay = 1000;
+    private List<RodModel> fuelRodList;
 
     public NPPS(String name)
     {
@@ -207,7 +220,64 @@ public class NPPS extends JFrame
         elecLabel.setFont(new Font(elecLabel.getName(), Font.PLAIN, 24));
         gaugePanel.add(elecLabel, BorderLayout.CENTER);
 
+        // fuel rod label show decay
 
+        var fuelRod = rodService.GetRod(RodModelStyle.FuelRod);
+        fuelRodList = fuelRod.GetRodModelList();
+
+        fuelRodEnergy0 = new JLabel("Fuelrod " +fuelRodList.get(0).GetRodName() + " fuel "+ fuelRodList.get(0).GetLifeSpan()/1000 +" %");
+        fuelRodEnergy0.setFont(new Font(elecLabel.getName(), Font.PLAIN, 24));
+        gaugePanel.add(fuelRodEnergy0, BorderLayout.CENTER);
+
+        fuelRodBar0 = new JProgressBar (0,100);
+        fuelRodBar0.setPreferredSize( new Dimension (100, 25));
+        fuelRodBar0.setForeground(new Color(0,255,255));
+        gaugePanel.add(fuelRodBar0);
+
+        fuelRodEnergy1 = new JLabel("Fuelrod " +fuelRodList.get(1).GetRodName() + " fuel "+ fuelRodList.get(1).GetLifeSpan()/1000 +" %");
+        fuelRodEnergy1.setFont(new Font(elecLabel.getName(), Font.PLAIN, 24));
+        gaugePanel.add(fuelRodEnergy1, BorderLayout.CENTER);
+
+        fuelRodBar1 = new JProgressBar (0,100);
+        fuelRodBar1.setPreferredSize( new Dimension (100, 25));
+        fuelRodBar1.setForeground(new Color(0,255,255));
+        gaugePanel.add(fuelRodBar1);
+
+        fuelRodEnergy2 = new JLabel("Fuelrod " +fuelRodList.get(2).GetRodName() + " fuel "+ fuelRodList.get(2).GetLifeSpan()/1000 +" %");
+        fuelRodEnergy2.setFont(new Font(elecLabel.getName(), Font.PLAIN, 24));
+        gaugePanel.add(fuelRodEnergy2, BorderLayout.CENTER);
+
+        fuelRodBar2 = new JProgressBar (0,100);
+        fuelRodBar2.setPreferredSize( new Dimension (100, 25));
+        fuelRodBar2.setForeground(new Color(0,255,255));
+        gaugePanel.add(fuelRodBar2);
+
+        fuelRodEnergy3 = new JLabel("Fuelrod " +fuelRodList.get(3).GetRodName() + " fuel "+ fuelRodList.get(3).GetLifeSpan()/1000 +" %");
+        fuelRodEnergy3.setFont(new Font(elecLabel.getName(), Font.PLAIN, 24));
+        gaugePanel.add(fuelRodEnergy3, BorderLayout.CENTER);
+
+        fuelRodBar3 = new JProgressBar (0,100);
+        fuelRodBar3.setPreferredSize( new Dimension (100, 25));
+        fuelRodBar3.setForeground(new Color(0,255,255));
+        gaugePanel.add(fuelRodBar3);
+
+        fuelRodEnergy4 = new JLabel("Fuelrod " +fuelRodList.get(4).GetRodName() + " fuel "+ fuelRodList.get(4).GetLifeSpan()/1000 +" %");
+        fuelRodEnergy4.setFont(new Font(elecLabel.getName(), Font.PLAIN, 24));
+        gaugePanel.add(fuelRodEnergy4, BorderLayout.CENTER);
+
+        fuelRodBar4 = new JProgressBar (0,100);
+        fuelRodBar4.setPreferredSize( new Dimension (100, 25));
+        fuelRodBar4.setForeground(new Color(0,255,255));
+        gaugePanel.add(fuelRodBar4);
+
+        fuelRodEnergy5 = new JLabel("Fuelrod " + fuelRodList.get(5).GetRodName() + " fuel "+ fuelRodList.get(5).GetLifeSpan()/1000 +" %");
+        fuelRodEnergy5.setFont(new Font(elecLabel.getName(), Font.PLAIN, 24));
+        gaugePanel.add(fuelRodEnergy5, BorderLayout.CENTER);
+
+        fuelRodBar5 = new JProgressBar (0,100);
+        fuelRodBar5.setPreferredSize( new Dimension (100, 25));
+        fuelRodBar5.setForeground(new Color(0,255,255));
+        gaugePanel.add(fuelRodBar5);
 
         Timer timer = new Timer(timerDelay, e -> 
         {
@@ -240,6 +310,43 @@ public class NPPS extends JFrame
 
     private void TimerAction(ActionEvent e) throws IOException
     {
+        SetTempLabel();
+        SetWaterTempImg();
+        SetLabelColour();
+        SetTempBar();
+        SetFuelRodBar();
+    }
+    
+    private void SetFuelRodBar()
+    {
+        rodService.FuelRodDecay();
+        var fuel0 = ((int)fuelRodList.get(0).GetLifeSpan())/1000;
+        fuelRodEnergy0.setText("Fuelrod " + fuelRodList.get(0).GetRodName() + " fuel "+ fuelRodList.get(0).GetLifeSpan()/1000 +" %");
+        fuelRodBar0.setValue(fuel0);
+
+        var fuel1 = ((int)fuelRodList.get(1).GetLifeSpan())/1000;
+        fuelRodEnergy1.setText("Fuelrod " + fuelRodList.get(1).GetRodName() + " fuel "+ fuelRodList.get(1).GetLifeSpan()/1000 +" %");
+        fuelRodBar1.setValue(fuel1);
+
+        var fuel2 = ((int)fuelRodList.get(2).GetLifeSpan())/1000;
+        fuelRodEnergy2.setText("Fuelrod " + fuelRodList.get(2).GetRodName() + " fuel "+ fuelRodList.get(2).GetLifeSpan()/1000 +" %");
+        fuelRodBar2.setValue(fuel2);
+
+        var fuel3 = ((int)fuelRodList.get(3).GetLifeSpan())/1000;
+        fuelRodEnergy3.setText("Fuelrod " + fuelRodList.get(3).GetRodName() + " fuel "+ fuelRodList.get(3).GetLifeSpan()/1000 +" %");
+        fuelRodBar3.setValue(fuel3);
+
+        var fuel4 = ((int)fuelRodList.get(4).GetLifeSpan())/1000;
+        fuelRodEnergy4.setText("Fuelrod " + fuelRodList.get(4).GetRodName() + " fuel "+ fuelRodList.get(4).GetLifeSpan()/1000 +" %");
+        fuelRodBar4.setValue(fuel4);
+
+        var fuel5 = ((int)fuelRodList.get(5).GetLifeSpan())/1000;
+        fuelRodEnergy5.setText("Fuelrod " + fuelRodList.get(5).GetRodName() + " fuel "+ fuelRodList.get(5).GetLifeSpan()/1000 +" %");
+        fuelRodBar5.setValue(fuel5);
+    }
+
+    private void SetTempLabel()
+    {
         double add = 0;
         add = reactorService.Calculate();
 
@@ -260,10 +367,6 @@ public class NPPS extends JFrame
         }
 
         tempLabel.setText("Temperature: " + tempValue + " °C");
-
-        SetWaterTempImg();
-        SetLabelColour();
-        SetTempBar();
     }
 
     private void SetTempBar()
