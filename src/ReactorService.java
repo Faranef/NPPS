@@ -20,37 +20,48 @@ public class ReactorService
 
     // do the calculations here
 
-    public double Calculate()
+    public double CalculateTemp()
     {
         double amount = 0;
         double amountAbove = 0;
-        double amountUnder = 0;
+        double amountControlRod = 0;
         var fuelRods = rodService.GetRod(RodModelStyle.FuelRod);
         var controlRod = rodService.GetRod(RodModelStyle.ControlRod);
-        amountUnder = controlRod.GetRodLevel() * 6;
+        //amountControlRod = controlRod.GetRodLevel();
+        amountControlRod = controlRod.GetRodLevel() * 6;
         
         for (var fuelRod : fuelRods.GetRodModelList()) 
         {
-            // if (fuelRod.GetRodLevel() > controlRod.GetRodLevel()) 
-            // {
-            //     amountAbove += fuelRod.GetRodLevel() - controlRod.GetRodLevel();
-            // }    
-            amountAbove += fuelRod.GetRodLevel();
-            
-            // if (fuelRod.GetRodLevel() < controlRod.GetRodLevel()) 
-            // {
-            //     amountUnder +=  controlRod.GetRodLevel() - fuelRod.GetRodLevel();
-            // }  
+            if (fuelRod.IsActive()) 
+            {
+                amountAbove += fuelRod.GetRodLevel();
+            }
         }
 
-        // if (amountAbove <= 0) 
-        // {
-        //     amountUnder = 0;
-        // }
+        //amount = amountAbove * (amountControlRod /100);
 
-        amount = amountAbove - amountUnder;
+        amount = amountAbove - amountControlRod;
             
         return amount;
     }
 
+    public double CalculateWattage(double temp)
+    {
+        double amount = 0;
+
+        if (temp <= 100) 
+        {
+            amount = 0;
+        }
+        else if (temp >= 101 && temp <= 299) 
+        {
+            amount = temp * 3.67;
+        }
+        else if (temp >= 300)
+        {
+            amount = 1100;
+        } 
+
+        return amount;
+    }
 }

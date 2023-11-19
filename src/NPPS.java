@@ -78,7 +78,7 @@ public class NPPS extends JFrame
 
         for (int i = 1; i < 7; i++)
         {
-            RodModel rod = new RodModel(0, Integer.toString(i), RodModelStyle.FuelRod, 100000);
+            RodModel rod = new RodModel(0, Integer.toString(i), RodModelStyle.FuelRod, 100000, true);
             list.add(rod);
         }
 
@@ -168,46 +168,44 @@ public class NPPS extends JFrame
         controlsPanel.add(rodLevelLabel);
         controlsPanel.add(rodSlider);
 
-        var img = ImageIO.read(new File("./Images/case.png"));
-        JLabel reactor = new JLabel(new ImageIcon(img));
-        reactor.setBounds(0, 0, 1000, 600);
-        reactor.setVisible(true);
+        JLabel reactor = CreateImages();
 
-        var imgCold = ImageIO.read(new File("./Images/water00.png"));
-        waterImg = new JLabel(new ImageIcon(imgCold));
-        waterImg.setBounds(0, 0, 1000, 600);
-        waterImg.setVisible(true);
+        CreateLabels(gaugePanel);
 
-        var fuelRodImg0 = ImageIO.read(new File("./Images/fuelRod0.png"));
-        fuelRod0 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod0.setBounds(0, 132, 1000, 0);
-        fuelRod0.setVisible(true);
+        
+        CreateFuelRodDecayDisplay(gaugePanel);
 
-        fuelRod1 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod1.setBounds(0, 132, 1060, 0);
-        fuelRod1.setVisible(true);
+        Timer timer = new Timer(timerDelay, e -> 
+        {
+            try
+                {
+                    TimerAction(e);
+                } 
+                catch (IOException ex)
+                {
+                    ex.printStackTrace();
+                }
+        });
 
-        fuelRod2 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod2.setBounds(0, 132, 1120, 0);
-        fuelRod2.setVisible(true);
+        timer.start();
 
-        fuelRod3 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod3.setBounds(0, 132, 1180, 0);
-        fuelRod3.setVisible(true);
+        viewPanelLayerd.add(reactor, BorderLayout.CENTER, 1);
+        viewPanelLayerd.add(waterImg, BorderLayout.CENTER, 2);
+        viewPanelLayerd.add(fuelRod0, BorderLayout.CENTER, 0);
+        viewPanelLayerd.add(fuelRod1, BorderLayout.CENTER, 0);
+        viewPanelLayerd.add(fuelRod2, BorderLayout.CENTER, 0);
+        viewPanelLayerd.add(fuelRod3, BorderLayout.CENTER, 0);
+        viewPanelLayerd.add(fuelRod4, BorderLayout.CENTER,0);
+        viewPanelLayerd.add(fuelRod5, BorderLayout.CENTER,0);
+        viewPanelLayerd.add(controlRods, BorderLayout.CENTER,0);
+        viewPanelLayerd.add(controlsPanel, 98);
+        viewPanelLayerd.add(gaugePanel, 99);
 
-        fuelRod4 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod4.setBounds(0, 132, 1240, 0);
-        fuelRod4.setVisible(true);
+        contentPane.add(viewPanelLayerd);
+    }
 
-        fuelRod5 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod5.setBounds(0, 132, 1300, 0);
-        fuelRod5.setVisible(true);
-
-        var controlrodsImg = ImageIO.read(new File("./Images/controlRods.png"));
-        controlRods = new JLabel(new ImageIcon(controlrodsImg));
-        controlRods.setBounds(0, 132, 1000, sliderValue*3);
-        controlRods.setVisible(true);
-
+    private void CreateLabels(JPanel gaugePanel)
+    {
         tempLabel = new JLabel("Temperature: " + tempValue + " °C");
         tempLabel.setFont(new Font(tempLabel.getName(), Font.PLAIN, 24));
         gaugePanel.add(tempLabel, BorderLayout.CENTER);
@@ -219,9 +217,10 @@ public class NPPS extends JFrame
         elecLabel = new JLabel("Wattage: " + wattValue + " W");
         elecLabel.setFont(new Font(elecLabel.getName(), Font.PLAIN, 24));
         gaugePanel.add(elecLabel, BorderLayout.CENTER);
+    }
 
-        // fuel rod label show decay
-
+    private void CreateFuelRodDecayDisplay(JPanel gaugePanel)
+    {
         var fuelRod = rodService.GetRod(RodModelStyle.FuelRod);
         fuelRodList = fuelRod.GetRodModelList();
 
@@ -278,77 +277,144 @@ public class NPPS extends JFrame
         fuelRodBar5.setPreferredSize( new Dimension (100, 25));
         fuelRodBar5.setForeground(new Color(0,255,255));
         gaugePanel.add(fuelRodBar5);
+    }
 
-        Timer timer = new Timer(timerDelay, e -> 
-        {
-            try
-                {
-                    TimerAction(e);
-                } 
-                catch (IOException e1)
-                {
-                    e1.printStackTrace();
-                }
-        });
+    private JLabel CreateImages() throws IOException
+    {
+        var img = ImageIO.read(new File("./Images/case.png"));
+        JLabel reactor = new JLabel(new ImageIcon(img));
+        reactor.setBounds(0, 0, 1000, 600);
+        reactor.setVisible(true);
 
-        timer.start();
+        var imgCold = ImageIO.read(new File("./Images/water00.png"));
+        waterImg = new JLabel(new ImageIcon(imgCold));
+        waterImg.setBounds(0, 0, 1000, 600);
+        waterImg.setVisible(true);
 
-        viewPanelLayerd.add(reactor, BorderLayout.CENTER, 1);
-        viewPanelLayerd.add(waterImg, BorderLayout.CENTER, 2);
-        viewPanelLayerd.add(fuelRod0, BorderLayout.CENTER, 0);
-        viewPanelLayerd.add(fuelRod1, BorderLayout.CENTER, 0);
-        viewPanelLayerd.add(fuelRod2, BorderLayout.CENTER, 0);
-        viewPanelLayerd.add(fuelRod3, BorderLayout.CENTER, 0);
-        viewPanelLayerd.add(fuelRod4, BorderLayout.CENTER,0);
-        viewPanelLayerd.add(fuelRod5, BorderLayout.CENTER,0);
-        viewPanelLayerd.add(controlRods, BorderLayout.CENTER,0);
-        viewPanelLayerd.add(controlsPanel, 98);
-        viewPanelLayerd.add(gaugePanel, 99);
+        var fuelRodImg0 = ImageIO.read(new File("./Images/fuelRod0.png"));
+        fuelRod0 = new JLabel(new ImageIcon(fuelRodImg0));
+        fuelRod0.setBounds(0, 132, 1000, 0);
+        fuelRod0.setVisible(true);
 
-        contentPane.add(viewPanelLayerd);
+        fuelRod1 = new JLabel(new ImageIcon(fuelRodImg0));
+        fuelRod1.setBounds(0, 132, 1060, 0);
+        fuelRod1.setVisible(true);
+
+        fuelRod2 = new JLabel(new ImageIcon(fuelRodImg0));
+        fuelRod2.setBounds(0, 132, 1120, 0);
+        fuelRod2.setVisible(true);
+
+        fuelRod3 = new JLabel(new ImageIcon(fuelRodImg0));
+        fuelRod3.setBounds(0, 132, 1180, 0);
+        fuelRod3.setVisible(true);
+
+        fuelRod4 = new JLabel(new ImageIcon(fuelRodImg0));
+        fuelRod4.setBounds(0, 132, 1240, 0);
+        fuelRod4.setVisible(true);
+
+        fuelRod5 = new JLabel(new ImageIcon(fuelRodImg0));
+        fuelRod5.setBounds(0, 132, 1300, 0);
+        fuelRod5.setVisible(true);
+
+        var controlrodsImg = ImageIO.read(new File("./Images/controlRods.png"));
+        controlRods = new JLabel(new ImageIcon(controlrodsImg));
+        controlRods.setBounds(0, 132, 1000, sliderValue*3);
+        controlRods.setVisible(true);
+
+        return reactor;
     }
 
     private void TimerAction(ActionEvent e) throws IOException
     {
         SetTempLabel();
+        SetWattageLabel();
         SetWaterTempImg();
         SetLabelColour();
         SetTempBar();
         SetFuelRodBar();
     }
     
+    private void SetWattageLabel()
+    {
+        wattValue = reactorService.CalculateWattage(tempValue);
+        elecLabel.setText("Wattage: " + wattValue + " MW");
+    }
+
     private void SetFuelRodBar()
     {
         rodService.FuelRodDecay();
-        var fuel0 = ((int)fuelRodList.get(0).GetLifeSpan())/1000;
-        fuelRodEnergy0.setText("Fuelrod " + fuelRodList.get(0).GetRodName() + " fuel "+ fuelRodList.get(0).GetLifeSpan()/1000 +" %");
-        fuelRodBar0.setValue(fuel0);
 
-        var fuel1 = ((int)fuelRodList.get(1).GetLifeSpan())/1000;
-        fuelRodEnergy1.setText("Fuelrod " + fuelRodList.get(1).GetRodName() + " fuel "+ fuelRodList.get(1).GetLifeSpan()/1000 +" %");
-        fuelRodBar1.setValue(fuel1);
+        if (fuelRodList.get(0).IsActive())
+        {
+            var fuel0 = ((int)fuelRodList.get(0).GetLifeSpan())/1000;
+            fuelRodEnergy0.setText("Fuelrod " + fuelRodList.get(0).GetRodName() + " fuel " + fuelRodList.get(0).GetLifeSpan()/1000 +" %");
+            fuelRodBar0.setValue(fuel0);
+        }
+        else
+        {
+            fuelRodEnergy0.setEnabled(false);
+        }
 
-        var fuel2 = ((int)fuelRodList.get(2).GetLifeSpan())/1000;
-        fuelRodEnergy2.setText("Fuelrod " + fuelRodList.get(2).GetRodName() + " fuel "+ fuelRodList.get(2).GetLifeSpan()/1000 +" %");
-        fuelRodBar2.setValue(fuel2);
+        if (fuelRodList.get(1).IsActive())
+        {
+            var fuel1 = ((int)fuelRodList.get(1).GetLifeSpan())/1000;
+            fuelRodEnergy1.setText("Fuelrod " + fuelRodList.get(1).GetRodName() + " fuel " + fuelRodList.get(1).GetLifeSpan()/1000 +" %");
+            fuelRodBar1.setValue(fuel1);
+        }
+        else
+        {
+            fuelRodEnergy1.setEnabled(false);
+        }
 
-        var fuel3 = ((int)fuelRodList.get(3).GetLifeSpan())/1000;
-        fuelRodEnergy3.setText("Fuelrod " + fuelRodList.get(3).GetRodName() + " fuel "+ fuelRodList.get(3).GetLifeSpan()/1000 +" %");
-        fuelRodBar3.setValue(fuel3);
+        if (fuelRodList.get(2).IsActive())
+        {
+            var fuel2 = ((int)fuelRodList.get(2).GetLifeSpan())/1000;
+            fuelRodEnergy2.setText("Fuelrod " + fuelRodList.get(2).GetRodName() + " fuel " + fuelRodList.get(2).GetLifeSpan()/1000 +" %");
+            fuelRodBar2.setValue(fuel2);
+        }
+        else
+        {
+            fuelRodEnergy2.setEnabled(false);
+        }
 
-        var fuel4 = ((int)fuelRodList.get(4).GetLifeSpan())/1000;
-        fuelRodEnergy4.setText("Fuelrod " + fuelRodList.get(4).GetRodName() + " fuel "+ fuelRodList.get(4).GetLifeSpan()/1000 +" %");
-        fuelRodBar4.setValue(fuel4);
+        if (fuelRodList.get(3).IsActive())
+        {
+            var fuel3 = ((int)fuelRodList.get(3).GetLifeSpan())/1000;
+            fuelRodEnergy3.setText("Fuelrod " + fuelRodList.get(3).GetRodName() + " fuel " + fuelRodList.get(3).GetLifeSpan()/1000 +" %");
+            fuelRodBar3.setValue(fuel3);
+        }
+        else
+        {
+            fuelRodEnergy3.setEnabled(false);
+        }
+                
+        if (fuelRodList.get(4).IsActive())
+        {
+            var fuel4 = ((int)fuelRodList.get(4).GetLifeSpan())/1000;
+            fuelRodEnergy4.setText("Fuelrod " + fuelRodList.get(4).GetRodName() + " fuel " + fuelRodList.get(4).GetLifeSpan()/1000 +" %");
+            fuelRodBar4.setValue(fuel4);
+        }
+        else
+        {
+            fuelRodEnergy4.setEnabled(false);
+        }
 
-        var fuel5 = ((int)fuelRodList.get(5).GetLifeSpan())/1000;
-        fuelRodEnergy5.setText("Fuelrod " + fuelRodList.get(5).GetRodName() + " fuel "+ fuelRodList.get(5).GetLifeSpan()/1000 +" %");
-        fuelRodBar5.setValue(fuel5);
+        if (fuelRodList.get(5).IsActive())
+        {
+            var fuel5 = ((int)fuelRodList.get(5).GetLifeSpan())/1000;
+            fuelRodEnergy5.setText("Fuelrod " + fuelRodList.get(5).GetRodName() + " fuel " + fuelRodList.get(5).GetLifeSpan()/1000 +" %");
+            fuelRodBar5.setValue(fuel5);
+        }
+        else
+        {
+            fuelRodEnergy5.setEnabled(false);
+        }
     }
 
     private void SetTempLabel()
     {
         double add = 0;
-        add = reactorService.Calculate();
+        add = reactorService.CalculateTemp();
 
         if (tempValue <= 0 && add <= 0) 
         {
@@ -376,17 +442,17 @@ public class NPPS extends JFrame
 
     private void SetLabelColour()
     {
-        if(tempValue >= 750)
+        if(tempValue >= 100)
         {
             tempBar.setForeground(Color.orange);
         }
         
-        if(tempValue >= 900)
+        if(tempValue >= 300)
         {
             tempBar.setForeground(Color.red);
         }
         
-        if(tempValue >= 1000)
+        if(tempValue >= 300)
         {
             tempLabel.setForeground(Color.red);
         }
@@ -395,12 +461,12 @@ public class NPPS extends JFrame
             tempLabel.setForeground(Color.black);
         }
 
-        if (tempValue >= 1500) 
+        if (tempValue >= 600) 
         {
             ShowDialog();
         }
         
-        if(tempValue <=749)
+        if(tempValue <=100)
         {
             tempBar.setForeground(Color.black);
         }

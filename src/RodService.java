@@ -70,6 +70,11 @@ public class RodService
             var rodLevel = rodModel.GetRodLevel();
             var decay = rodLevel * 1.0025;
             rodModel.SetLifeSpan(rodModel.GetLifeSpan() - decay);
+
+            if(rodModel.GetLifeSpan() <= 0)
+            {
+                rodModel.SetActivity(false);
+            }
         }
     }
 }

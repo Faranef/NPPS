@@ -5,6 +5,7 @@ public class RodModel
     private int RodLevel;
     private double LifeSpan;
     private String RodName;
+    private boolean IsActive;
     private RodModelStyle Style;
     private List<RodModel> RodModelList = new ArrayList<RodModel>();
 
@@ -37,6 +38,16 @@ public class RodModel
     {
         LifeSpan = lifeSpan;
     }
+
+    public boolean IsActive()
+    {
+        return IsActive;
+    }
+
+    public void SetActivity(Boolean isAcitve)
+    {
+        IsActive = isAcitve;
+    }
     
     public RodModel(int rodLevel, String rodName, RodModelStyle style)
     {
@@ -45,12 +56,13 @@ public class RodModel
         Style = style;
     }
 
-    public RodModel(int rodLevel, String rodName, RodModelStyle style, double lifeSpan)
+    public RodModel(int rodLevel, String rodName, RodModelStyle style, double lifeSpan, boolean isActive)
     {
         RodLevel = rodLevel;
         RodName = rodName;
         Style = style;
         LifeSpan = lifeSpan;
+        IsActive = isActive;
     }
 
     public RodModel(int rodLevel, String rodName, RodModelStyle style, List<RodModel> rodModelList)
