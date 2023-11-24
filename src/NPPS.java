@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.*;
 
@@ -241,13 +242,28 @@ public class NPPS extends JFrame
     private void LoadGame()
     {
         // load values from a json file
+        final JFileChooser fileChooser = new JFileChooser();
 
+        var filter = new FileNameExtensionFilter("JSON", "json");
+        fileChooser.addChoosableFileFilter(filter);
+        fileChooser.showOpenDialog(this);
+        
+        File file = fileChooser.getSelectedFile();
     }
 
     private void SaveGame()
     {
         // save value to a json file
-        
+        final JFileChooser fileChooser = new JFileChooser();
+
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) 
+        {
+            File file = fileChooser.getSelectedFile();
+            var filter = new FileNameExtensionFilter("JSON", "json");
+            fileChooser.addChoosableFileFilter(filter);
+            // save to file
+        }
+
     }
 
     private void NewGame()
