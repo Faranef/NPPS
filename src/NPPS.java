@@ -684,7 +684,7 @@ public class NPPS extends JFrame
             dialog = new JDialog(this, "Warning!", false); // Set non-modal to interact with main window
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setSize(250, 50);
-            JLabel label = new JLabel("Warning Temperatur is getting too high!");
+            JLabel label = new JLabel("Temperature is getting too high!");
             label.setForeground(Color.red);
             label.setFont(new Font(label.getName(), Font.PLAIN, 24));
             dialog.add(label, BorderLayout.CENTER);
@@ -699,22 +699,22 @@ public class NPPS extends JFrame
     {
         BufferedImage imgWater = null;
 
-        if (tempValue <= 99)
+        if (tempValue <= 99.9999)
         {
             imgWater = ImageIO.read(new File("./Images/water00.png"));
         }
 
-        if (tempValue >= 100 && tempValue <= 449)
+        if (tempValue >= 100.0000 && tempValue <= 349.9999)
         {
             imgWater = ImageIO.read(new File("./Images/water01.png"));
         }
 
-        if (tempValue >= 450 && tempValue <= 849)
+        if (tempValue >= 350.0000 && tempValue <= 549.9999)
         {
             imgWater = ImageIO.read(new File("./Images/water02.png"));
         }
 
-        if (tempValue >= 850)
+        if (tempValue >= 550.0000)
         {
             imgWater = ImageIO.read(new File("./Images/water03.png"));
         }
