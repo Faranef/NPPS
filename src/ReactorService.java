@@ -2,10 +2,12 @@ public class ReactorService
 {
     private static ReactorService Instance = null;
     private RodService rodService;
+    private EconomyService economyService;
 
     private ReactorService()
     {
         rodService = RodService.GetInstance();
+        economyService = EconomyService.GetInstance();
     }
 
     public static ReactorService GetInstance()

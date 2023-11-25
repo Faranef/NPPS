@@ -4,9 +4,11 @@ public class RodService
 {
     private static RodService Instance = null;
     private List<RodModel> rodList = new ArrayList<RodModel>();
+    private EconomyService economyService;
 
     private RodService() 
     {
+        economyService = EconomyService.GetInstance();
     }
 
     public static RodService GetInstance()
@@ -76,5 +78,19 @@ public class RodService
                 rodModel.SetActivity(false);
             }
         }
+    }
+
+    public void SetAllToNew()
+    {
+        Optional<RodModel> fuelRod = rodList.stream().filter(x -> x.GetRodStyle() == RodModelStyle.FuelRod).findFirst();
+
+        for (RodModel rodModel : fuelRod.get().GetRodModelList())
+        {
+            rodModel.SetRodLevel(0);
+            rodModel.SetLifeSpan(100000);   
+        }
+
+        Optional<RodModel> controlRod = rodList.stream().filter(x -> x.GetRodStyle() == RodModelStyle.ControlRod).findFirst();
+        controlRod.get().SetRodLevel(100);
     }
 }

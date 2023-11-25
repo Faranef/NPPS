@@ -11,8 +11,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.*;
 
 public class NPPS extends JFrame
 {
@@ -27,6 +25,8 @@ public class NPPS extends JFrame
     private int sliderValue;
     private RodService rodService;
     private ReactorService reactorService;
+    private EconomyService economyService;
+    private EventService eventService;
     private JLabel fuelRod0;
     private JLabel fuelRod1;
     private JLabel fuelRod2;
@@ -62,9 +62,11 @@ public class NPPS extends JFrame
         super(name);
         setResizable(false);
         setPreferredSize(new Dimension(1440, 900));
+        economyService = EconomyService.GetInstance();
         rodService = RodService.GetInstance();
         CreateRods();
         reactorService = ReactorService.GetInstance();
+        eventService = EventService.GetInstance();
     }
 
     private void CreateRods()
@@ -269,7 +271,9 @@ public class NPPS extends JFrame
     private void NewGame()
     {
         //reset all values to 0
-
+        tempValue = 0;
+        wattValue =0;
+        rodService.SetAllToNew();
     }
 
     private void AddControlsToPanel(JLayeredPane viewPanelLayerd, JPanel controlsPanel, JPanel gaugePanel, JLabel reactor)
