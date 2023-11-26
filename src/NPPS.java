@@ -1,15 +1,23 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.image.BufferedImage;
 
+import java.io.File;
+import java.io.IOException;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Calendar;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
+
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class NPPS extends JFrame
@@ -19,6 +27,7 @@ public class NPPS extends JFrame
     private JComboBox rodComboBox;
     private JLabel fuelRodLabel;
     private JLabel rodLevelLabel;
+    private JLabel dateLabel;
     private JLabel waterImg;
     private JLabel propImg;
     private JSlider rodSlider;
@@ -50,11 +59,13 @@ public class NPPS extends JFrame
     private JProgressBar fuelRodBar4;
     private JProgressBar fuelRodBar5;
     private JDialog dialog;
+    private JInternalFrame budgetWindow;
     private double tempValue;
-    private double wattValue;
+    private int wattValue;
     private int timerDelay = 1000;
     private List<RodModel> fuelRodList;
     private Timer spinnerTimer;
+    private Date gameDate;
     private Color fuelRodColour = new Color(0, 255, 0);
 
     public NPPS(String name)
@@ -67,6 +78,13 @@ public class NPPS extends JFrame
         CreateRods();
         reactorService = ReactorService.GetInstance();
         eventService = EventService.GetInstance();
+
+    }
+
+    private void CreateBudgetingFrame(JLayeredPane viewPanelLayerd)
+    {
+        budgetWindow = new BugetingFrame();
+        viewPanelLayerd.add(budgetWindow);
     }
 
     private void CreateRods()
@@ -176,6 +194,7 @@ public class NPPS extends JFrame
 
         JLabel reactor = CreateImages();
 
+        CreateDateLabel(gaugePanel);
         CreateLabels(gaugePanel);
         CreateFuelRodDecayDisplay(gaugePanel);
 
@@ -197,9 +216,42 @@ public class NPPS extends JFrame
             propImg.setIcon(GetRotatedIcon(rotationAngle));
         });
 
+        Timer dateTimer = new Timer(timerDelay * 4, e ->{
+            RunDateTimer();
+        });
+
+        dateTimer.start();
+
         AddControlsToPanel(viewPanelLayerd, controlsPanel, gaugePanel, reactor);
         CreateMenuBar();
+        CreateBudgetingFrame(viewPanelLayerd);
         contentPane.add(viewPanelLayerd);
+    }
+
+    private void CreateDateLabel(JPanel gaugePanel)
+    {
+        var gaugeTempPanel = new JPanel();
+        gaugeTempPanel.setLayout(new BoxLayout(gaugeTempPanel, BoxLayout.PAGE_AXIS));
+        gaugeTempPanel.setBackground(new Color(151, 166, 176));
+        gaugeTempPanel.setPreferredSize(new Dimension(400,50));
+
+        dateLabel = new JLabel();
+        var date = GetCurrentDate();
+        String todaysdate = ConvertDate(date);
+        dateLabel.setText(todaysdate);
+        dateLabel.setFont(new Font(dateLabel.getName(), Font.PLAIN, 20));
+        dateLabel.setForeground(Color.black);
+
+        gaugeTempPanel.add(dateLabel);
+        gaugeTempPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        gaugePanel.add(gaugeTempPanel);
+    }
+
+    private String ConvertDate(Date date)
+    {
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+        return dateFormat.format(date);
     }
 
     private void CreateMenuBar() throws IOException
@@ -253,6 +305,11 @@ public class NPPS extends JFrame
     private void OpenBudegtWindow()
     {
         // show buegetting form
+        if (!budgetWindow.isVisible())
+        {
+            budgetWindow.setVisible(true);
+            
+        }
     }
 
     private void LoadGame()
@@ -288,8 +345,11 @@ public class NPPS extends JFrame
     {
         //reset all values to 0
         tempValue = 0;
-        wattValue =0;
+        wattValue = 0;
         rodService.SetAllToNew();
+        economyService.NewGameSetting();
+        selectedRod = rodService.GetRod(RodModelStyle.ControlRod);
+        dateLabel.setText(ConvertDate(GetCurrentDate()));
     }
 
     private void AddControlsToPanel(JLayeredPane viewPanelLayerd, JPanel controlsPanel, JPanel gaugePanel, JLabel reactor)
@@ -314,7 +374,7 @@ public class NPPS extends JFrame
         gaugeTempPanel.setLayout(new BoxLayout(gaugeTempPanel, BoxLayout.PAGE_AXIS));
         gaugeTempPanel.setBackground(new Color(151, 166, 176));
 
-        tempLabel = new JLabel("Temperature: " + tempValue + " °C");
+        tempLabel = new JLabel("Temperature: " + (int)tempValue + " °C");
         tempLabel.setFont(new Font(tempLabel.getName(), Font.PLAIN, 18));
         tempLabel.setForeground(Color.black);
         gaugeTempPanel.add(tempLabel);
@@ -334,6 +394,14 @@ public class NPPS extends JFrame
 
         gaugeTempPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         gaugePanel.add(gaugeTempPanel);
+    }
+
+    private Date GetCurrentDate()
+    {
+        Calendar cal = Calendar.getInstance();
+        Date date = cal.getTime();
+        gameDate = date;
+        return date;
     }
 
     private void CreateFuelRodDecayDisplay(JPanel gaugePanel)
@@ -535,6 +603,26 @@ public class NPPS extends JFrame
         SetFuelRodBar();
         StartStopProp();
         CoolDown();
+
+    }
+
+    private void RunDateTimer()
+    {
+        String todaysdate = SetDate();
+        dateLabel.setText(todaysdate);
+    }
+
+    private String SetDate()
+    {
+        var date = gameDate;
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        Calendar c = Calendar.getInstance(); 
+        c.setTime(date); 
+        c.add(Calendar.DATE, 1);
+        date = c.getTime();
+        gameDate = date;
+
+        return dateFormat.format(date);
     }
 
     private void CoolDown()
@@ -544,7 +632,7 @@ public class NPPS extends JFrame
         if (areRodsIn == 0 && tempValue != 0)
         {
             tempValue = tempValue - 0.125;
-            tempLabel.setText("Temperature: " + tempValue + " °C");
+            tempLabel.setText("Temperature: " + (int)tempValue + " °C");
         }
     }
 
@@ -658,7 +746,7 @@ public class NPPS extends JFrame
             }
         }
 
-        tempLabel.setText("Temperature: " + tempValue + " °C");
+        tempLabel.setText("Temperature: " + (int)tempValue + " °C");
     }
 
     private void SetTempBar()
@@ -744,7 +832,7 @@ public class NPPS extends JFrame
 
     private void FuelRodComboBoxChange(ActionEvent e)
     {
-        selectedRod = (RodModel) ((JComboBox) e.getSource()).getSelectedItem();
+        selectedRod = (RodModel)((JComboBox) e.getSource()).getSelectedItem();
 
         sliderValue = selectedRod.GetRodLevel();
         rodSlider.setValue(sliderValue);
@@ -760,43 +848,43 @@ public class NPPS extends JFrame
 
         switch (selectedRod.GetRodStyle())
         {
-        case ControlRod:
-            controlRods.setBounds(0, 132, 1000, sliderValue * 3);
-            break;
-        case FuelRod:
-            if (selectedRod.GetRodName().equals("1"))
-            {
-                fuelRod0.setBounds(0, 132, 1000, sliderValue * 3);
-            }
+            case ControlRod:
+                controlRods.setBounds(0, 132, 1000, sliderValue * 3);
+                break;
+            case FuelRod:
+                if (selectedRod.GetRodName().equals("1"))
+                {
+                    fuelRod0.setBounds(0, 132, 1000, sliderValue * 3);
+                }
 
-            if (selectedRod.GetRodName().equals("2"))
-            {
-                fuelRod1.setBounds(0, 132, 1060, sliderValue * 3);
-            }
+                if (selectedRod.GetRodName().equals("2"))
+                {
+                    fuelRod1.setBounds(0, 132, 1060, sliderValue * 3);
+                }
 
-            if (selectedRod.GetRodName().equals("3"))
-            {
-                fuelRod2.setBounds(0, 132, 1120, sliderValue * 3);
-            }
+                if (selectedRod.GetRodName().equals("3"))
+                {
+                    fuelRod2.setBounds(0, 132, 1120, sliderValue * 3);
+                }
 
-            if (selectedRod.GetRodName().equals("4"))
-            {
-                fuelRod3.setBounds(0, 132, 1180, sliderValue * 3);
-            }
+                if (selectedRod.GetRodName().equals("4"))
+                {
+                    fuelRod3.setBounds(0, 132, 1180, sliderValue * 3);
+                }
 
-            if (selectedRod.GetRodName().equals("5"))
-            {
-                fuelRod4.setBounds(0, 132, 1240, sliderValue * 3);
-            }
+                if (selectedRod.GetRodName().equals("5"))
+                {
+                    fuelRod4.setBounds(0, 132, 1240, sliderValue * 3);
+                }
 
-            if (selectedRod.GetRodName().equals("6"))
-            {
-                fuelRod5.setBounds(0, 132, 1300, sliderValue * 3);
-            }
-            break;
-        case Moderator:
+                if (selectedRod.GetRodName().equals("6"))
+                {
+                    fuelRod5.setBounds(0, 132, 1300, sliderValue * 3);
+                }
+                break;
+            case Moderator:
 
-            break;
+                break;
         }
     }
 

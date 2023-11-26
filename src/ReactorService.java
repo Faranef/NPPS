@@ -47,7 +47,7 @@ public class ReactorService
         return amount;
     }
 
-    public double CalculateWattage(double temp)
+    public int CalculateWattage(double temp)
     {
         double amount = 0;
 
@@ -67,6 +67,6 @@ public class ReactorService
             economyService.AddToBalance(200);
         } 
 
-        return amount;
+        return (int)amount;
     }
 }

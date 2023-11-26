@@ -15,6 +15,16 @@ public class EconomyService
     {
         Balance = balance;
     }
+    
+    public double GetFuelRodPrice()
+    {
+        return FuelRodPrice;
+    }
+
+    public void SetFuelRodPrice(double fuelRodPrice)
+    {
+        FuelRodPrice = fuelRodPrice;
+    }
 
     public void SetTotalProfit(double totalProfit)
     {
@@ -26,16 +36,16 @@ public class EconomyService
         TotalLoss = totalLoss;
     }
 
-    public void AddToBalance(double profit)
+    public void AddToBalance(double income)
     {
-        TotalProfit = TotalProfit + profit;
-        Balance = Balance + profit;
+        TotalProfit = TotalProfit + income;
+        Balance = Balance + income;
     }
 
-    public void DeductFromBalance(double loss)
+    public void DeductFromBalance(double expenditure)
     {
-        TotalLoss = TotalLoss + loss;
-        Balance = Balance - loss;
+        TotalLoss = TotalLoss + expenditure;
+        Balance = Balance - expenditure;
     }
 
     private EconomyService() 
@@ -52,5 +62,11 @@ public class EconomyService
         return Instance;
     }
 
-
+    public void NewGameSetting()
+    {
+        Balance = 0;
+        TotalProfit = 0;
+        TotalLoss = 0;
+        FuelRodPrice = 50000;
+    }
 }
