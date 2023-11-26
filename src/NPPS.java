@@ -238,13 +238,28 @@ public class NPPS extends JFrame
         menuItem.addActionListener(e -> { System.exit(0); });
         menu.add(menuItem);
 
+        menu = new JMenu("Info");
+        menu.setMnemonic(KeyEvent.VK_I);
+        menuBar.add(menu);
+        
+        menuItem = new JMenuItem("Budget", KeyEvent.VK_B);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
+        menuItem.addActionListener(e -> { OpenBudegtWindow(); });
+        menu.add(menuItem);
+
         setJMenuBar(menuBar);
+    }
+
+    private void OpenBudegtWindow()
+    {
+        // show buegetting form
     }
 
     private void LoadGame()
     {
         // load values from a json file
         final JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(".\\GameData"));
 
         var filter = new FileNameExtensionFilter("JSON", "json");
         fileChooser.addChoosableFileFilter(filter);
@@ -257,6 +272,7 @@ public class NPPS extends JFrame
     {
         // save value to a json file
         final JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(".\\GameData"));
 
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) 
         {

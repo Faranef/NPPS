@@ -54,14 +54,17 @@ public class ReactorService
         if (temp <= 100) 
         {
             amount = 0;
+            economyService.AddToBalance(0);
         }
         else if (temp >= 101 && temp <= 299) 
         {
             amount = temp * 3.67;
+            economyService.AddToBalance(100);
         }
         else if (temp >= 300)
         {
             amount = 1100;
+            economyService.AddToBalance(200);
         } 
 
         return amount;
