@@ -1,55 +1,36 @@
+import java.util.*;
+
 public class EconomyService 
 {
     private static EconomyService Instance = null;
-    private double Balance = 0;
-    private double TotalProfit = 0;
-    private double TotalLoss = 0;
-    private double FuelRodPrice = 50000;
+    private List<BudgetModel> BudgetList = new ArrayList<BudgetModel>();
 
-    public double GetBalance()
+    public List<BudgetModel> GetBudgetList()
     {
-        return Balance;
+        return BudgetList;
     }
 
-    public void SetBalance(double balance)
+    public BudgetModel GetCurrentBudgetList(int currentMonth)
     {
-        Balance = balance;
-    }
-    
-    public double GetFuelRodPrice()
-    {
-        return FuelRodPrice;
+        Optional<BudgetModel> budget = BudgetList.stream().filter(x -> x.GetCurrentMonth() == currentMonth).findFirst();
+        return budget.get();
     }
 
-    public void SetFuelRodPrice(double fuelRodPrice)
+    public void SetBudgetList(List<BudgetModel> budgetList)
     {
-        FuelRodPrice = fuelRodPrice;
+        BudgetList = budgetList;
     }
 
-    public void SetTotalProfit(double totalProfit)
+    public void CreateBudgetModel()
     {
-        TotalProfit = totalProfit;
-    }
-
-    public void SetTotalLoss(double totalLoss)
-    {
-        TotalLoss = totalLoss;
-    }
-
-    public void AddToBalance(double income)
-    {
-        TotalProfit = TotalProfit + income;
-        Balance = Balance + income;
-    }
-
-    public void DeductFromBalance(double expenditure)
-    {
-        TotalLoss = TotalLoss + expenditure;
-        Balance = Balance - expenditure;
+        BudgetModel budgetModel = new BudgetModel();
+        budgetModel.SetSoldElectricity(0);
+        BudgetList.add(budgetModel);
     }
 
     private EconomyService() 
     {
+        CreateBudgetModel();
     }
 
     public static EconomyService GetInstance()
@@ -62,11 +43,5 @@ public class EconomyService
         return Instance;
     }
 
-    public void NewGameSetting()
-    {
-        Balance = 0;
-        TotalProfit = 0;
-        TotalLoss = 0;
-        FuelRodPrice = 50000;
-    }
+    
 }

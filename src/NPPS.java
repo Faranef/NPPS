@@ -83,7 +83,7 @@ public class NPPS extends JFrame
 
     private void CreateBudgetingFrame(JLayeredPane viewPanelLayerd)
     {
-        budgetWindow = new BugetingFrame();
+        budgetWindow = new BudgetingFrame();
         viewPanelLayerd.add(budgetWindow);
     }
 
@@ -347,7 +347,7 @@ public class NPPS extends JFrame
         tempValue = 0;
         wattValue = 0;
         rodService.SetAllToNew();
-        economyService.NewGameSetting();
+        //economyService.NewGameSetting();
         selectedRod = rodService.GetRod(RodModelStyle.ControlRod);
         dateLabel.setText(ConvertDate(GetCurrentDate()));
     }

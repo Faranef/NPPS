@@ -89,7 +89,6 @@ public class RodService
         {
             rodModel.SetRodLevel(0);
             rodModel.SetLifeSpan(100000);   
-            economyService.DeductFromBalance(50000);    // set variable rod price - event driven
         }
 
         Optional<RodModel> controlRod = rodList.stream().filter(x -> x.GetRodStyle() == RodModelStyle.ControlRod).findFirst();
