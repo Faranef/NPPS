@@ -94,4 +94,22 @@ public class RodService
         Optional<RodModel> controlRod = rodList.stream().filter(x -> x.GetRodStyle() == RodModelStyle.ControlRod).findFirst();
         controlRod.get().SetRodLevel(100);
     }
+
+    public void ReplaceFuelRodById(int fuelRodId)
+    {
+        var fuelRodList = rodList.stream().filter(x -> x.GetRodStyle() == RodModelStyle.FuelRod).findFirst().get();
+
+        var fuelRod = fuelRodList.GetRodModelList().get(fuelRodId);
+
+        if(fuelRod.IsActive() == false)
+        {
+            fuelRod.SetActivity(true);
+            fuelRod.SetRodLevel(0);
+            fuelRod.SetLifeSpan(100000);
+            
+            var budget = economyService.GetLastBudgetList();
+            var rodPrice = budget.GetFuelRodPrice();
+        }
+
+    }
 }

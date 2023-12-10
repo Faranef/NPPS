@@ -15,16 +15,23 @@ public class BudgetingFrame extends JInternalFrame
         budgetList = economyService.GetBudgetList();
         CreateFrame();
         CreatePanels();
-
-        //Create tabs with "Previous Month"  "Two Months Ago"
-        //https://docs.oracle.com/javase/tutorial/displayCode.html?code=https://docs.oracle.com/javase/tutorial/uiswing/examples/components/TabbedPaneDemoProject/src/components/TabbedPaneDemo.java
     }
 
     private void CreatePanels()
     {
         JTabbedPane tabbedPane = new JTabbedPane();
-        
-        for (BudgetModel budgetModel : budgetList) 
+        List<BudgetModel> list;
+
+        if(budgetList.size() < 3)
+        {
+            list= budgetList;
+        }
+        else
+        {
+            list = budgetList.subList(budgetList.size()-3, budgetList.size());
+        }
+
+        for (BudgetModel budgetModel : list) 
         {
             JPanel bugetPanel = new JPanel();
             JPanel panelIncome = IncomePanel(budgetModel);
@@ -32,7 +39,7 @@ public class BudgetingFrame extends JInternalFrame
             bugetPanel.add(panelIncome, BorderLayout.NORTH);
             bugetPanel.add(new JSeparator(), BorderLayout.NORTH);
             bugetPanel.add(panelLoss, BorderLayout.NORTH);
-            tabbedPane.addTab("Two Previous Months",bugetPanel);
+            tabbedPane.addTab(budgetModel.toString(),bugetPanel);
         }
         
         this.add(tabbedPane);
@@ -63,7 +70,7 @@ public class BudgetingFrame extends JInternalFrame
         panelIncome.add(new Label());
         panelIncome.add(new Label());
         panelIncome.add(new Label("Electricity sold:"));
-        panelIncome.add(new Label("123.45"));
+        panelIncome.add(new Label(Double.toString(budgetModel.GetSoldElectricity())));
         return panelIncome;
     }
 
@@ -83,9 +90,6 @@ public class BudgetingFrame extends JInternalFrame
 
         setLocation(1440/2 - this.getWidth()/2, 900/2 - this.getHeight()/2);
     }
-
-
-
 
     protected JComponent makeTextPanel(String text) {
         JPanel panel = new JPanel(false);

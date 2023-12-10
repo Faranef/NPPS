@@ -10,27 +10,33 @@ public class EconomyService
         return BudgetList;
     }
 
-    public BudgetModel GetCurrentBudgetList(int currentMonth)
+    /// Gets the last inserted budget entry
+    public BudgetModel GetLastBudgetList()
     {
-        Optional<BudgetModel> budget = BudgetList.stream().filter(x -> x.GetCurrentMonth() == currentMonth).findFirst();
-        return budget.get();
+        return BudgetList.get(BudgetList.size()-1);
     }
 
-    public void SetBudgetList(List<BudgetModel> budgetList)
+    ///Gets the first budget entry
+    public BudgetModel GetFirstBudgetList()
     {
-        BudgetList = budgetList;
+        return BudgetList.get(0);
     }
 
-    public void CreateBudgetModel()
+    public void CreateBudgetModel(double currentBudget, int month, int year)
     {
         BudgetModel budgetModel = new BudgetModel();
-        budgetModel.SetSoldElectricity(0);
+        budgetModel.SetBudget(currentBudget);
+        budgetModel.SetCurrentMonth(month + 1);
+        budgetModel.SetCurrentYear(year);
         BudgetList.add(budgetModel);
     }
 
     private EconomyService() 
     {
-        CreateBudgetModel();
+        Calendar cal = Calendar.getInstance();
+        var month = cal.get(Calendar.MONTH);
+        var year = cal.get(Calendar.YEAR);
+        CreateBudgetModel(100000.00,month,year);
     }
 
     public static EconomyService GetInstance()

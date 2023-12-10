@@ -1,7 +1,17 @@
 public class BudgetModel 
 {
-    private double Budget = 1000000.00;
+    public double Budget;
     
+    public double GetBudget()
+    {
+        return Budget;
+    }
+
+    public void SetBudget(double budget)
+    {
+        Budget += budget;
+    }
+
     private double SoldElectricity = 0;
     private double MiscellaneausIncome = 0;
     private double TotalIncome = 0;
@@ -12,6 +22,17 @@ public class BudgetModel
     private double TotalLoss = 0;
 
     private int CurrentMonth;
+    private int CurrentYear;
+
+    public int GetCurrentYear()
+    {
+        return CurrentYear;
+    }
+
+    public void SetCurrentYear(int currentYear)
+    {
+        CurrentYear = currentYear;
+    }
 
     public int GetCurrentMonth()
     {
@@ -95,4 +116,9 @@ public class BudgetModel
         SoldElectricity = value;
     }
     
+    @Override
+    public String toString()
+    {
+        return Integer.toString(CurrentMonth) + "/" + Integer.toString(CurrentYear);
+    }
 }

@@ -22,6 +22,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class NPPS extends JFrame
 {
+    private JLayeredPane viewPanelLayerd;
     private RodModel selectedRod;
     private JComboBox fuelRodComboBox;
     private JComboBox rodComboBox;
@@ -66,6 +67,7 @@ public class NPPS extends JFrame
     private List<RodModel> fuelRodList;
     private Timer spinnerTimer;
     private Date gameDate;
+    private Date tempGameDate;
     private Color fuelRodColour = new Color(0, 255, 0);
 
     public NPPS(String name)
@@ -79,12 +81,6 @@ public class NPPS extends JFrame
         reactorService = ReactorService.GetInstance();
         eventService = EventService.GetInstance();
 
-    }
-
-    private void CreateBudgetingFrame(JLayeredPane viewPanelLayerd)
-    {
-        budgetWindow = new BudgetingFrame();
-        viewPanelLayerd.add(budgetWindow);
     }
 
     private void CreateRods()
@@ -141,7 +137,7 @@ public class NPPS extends JFrame
 
     private void AddComponentsToPane(Container contentPane) throws IOException
     {
-        JLayeredPane viewPanelLayerd = new JLayeredPane();
+        viewPanelLayerd = new JLayeredPane();
         viewPanelLayerd.setOpaque(true);
         viewPanelLayerd.setBackground(new Color(255, 255, 255));
 
@@ -224,7 +220,6 @@ public class NPPS extends JFrame
 
         AddControlsToPanel(viewPanelLayerd, controlsPanel, gaugePanel, reactor);
         CreateMenuBar();
-        CreateBudgetingFrame(viewPanelLayerd);
         contentPane.add(viewPanelLayerd);
     }
 
@@ -304,12 +299,9 @@ public class NPPS extends JFrame
 
     private void OpenBudegtWindow()
     {
-        // show buegetting form
-        if (!budgetWindow.isVisible())
-        {
-            budgetWindow.setVisible(true);
-            
-        }
+        budgetWindow = new BudgetingFrame();
+        viewPanelLayerd.add(budgetWindow);
+        budgetWindow.setVisible(true);
     }
 
     private void LoadGame()
@@ -533,6 +525,9 @@ public class NPPS extends JFrame
         fuelRodEnergy0.setFont(new Font(fuelRodEnergy0.getName(), Font.PLAIN, 18));
         fuelRodEnergy0.setToolTipText("Fuelrod 1 info");
         fuelRodEnergy0.setForeground(Color.black);
+
+        var asd = new ContextMenuListener(0);
+        fuelRodEnergy0.addMouseListener(asd);
         gaugeDecayPanel.add(fuelRodEnergy0);
 
         fuelRodBar0 = new JProgressBar(0, 100);
@@ -622,7 +617,35 @@ public class NPPS extends JFrame
         date = c.getTime();
         gameDate = date;
 
+        MonthlyCount(c);
+
         return dateFormat.format(date);
+    }
+
+    private void MonthlyCount(Calendar c)
+    {
+        var month = c.get(Calendar.MONTH);
+        var year = c.get(Calendar.YEAR);
+        Calendar cTemp = Calendar.getInstance(); 
+        int tempMonth = -1;
+
+        if (tempGameDate != null) 
+        {
+            cTemp.setTime(tempGameDate); 
+            tempMonth = cTemp.get(Calendar.MONTH);
+        }
+        
+        if (month != tempMonth) 
+        {
+            tempGameDate = gameDate;
+            var budget = economyService.GetLastBudgetList().Budget;
+
+            if ( tempMonth != -1) 
+            {
+               economyService.CreateBudgetModel(budget,month,year);
+               tempMonth = month;
+            }
+        }
     }
 
     private void CoolDown()
