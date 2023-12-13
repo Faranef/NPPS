@@ -5,6 +5,7 @@ public class ContextMenu extends JPopupMenu
     RodService rodService;
     JMenuItem item;
     
+    //maybe used later
     public ContextMenu() 
     {
         item = new JMenuItem("Menu Item");

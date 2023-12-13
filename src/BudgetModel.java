@@ -118,7 +118,7 @@ public class BudgetModel
 
     public void SetSoldElectricity(double value)
     {
-        SoldElectricity = value;
+        SoldElectricity += value;
     }
     
     @Override
