@@ -35,7 +35,7 @@ public class NPPS extends JFrame
     private int sliderValue;
     private RodService rodService;
     private ReactorService reactorService;
-    private EconomyService economyService;
+    private BudgetService economyService;
     private EventService eventService;
     private JLabel fuelRod0;
     private JLabel fuelRod1;
@@ -75,7 +75,7 @@ public class NPPS extends JFrame
         super(name);
         setResizable(false);
         setPreferredSize(new Dimension(1440, 900));
-        economyService = EconomyService.GetInstance();
+        economyService = BudgetService.GetInstance();
         rodService = RodService.GetInstance();
         CreateRods();
         reactorService = ReactorService.GetInstance();
@@ -143,8 +143,9 @@ public class NPPS extends JFrame
 
         JPanel controlsPanel = new JPanel();
         controlsPanel.setBackground(new Color(224, 224, 224));
-        controlsPanel.setBounds(0, 600, 1000, 300);
-
+        controlsPanel.setBounds(0, 600, 1000, 25);
+        controlsPanel.setLayout(new GridLayout(0,6));
+        
         JPanel gaugePanel = new JPanel();
         gaugePanel.setBackground(new Color(151, 166, 176));
         gaugePanel.setBounds(1000, 0, 424, 900);
@@ -153,6 +154,8 @@ public class NPPS extends JFrame
         { rodService.GetRod(RodModelStyle.ControlRod), rodService.GetRod(RodModelStyle.FuelRod),
                 // rodService.GetRod(RodModelStyle.Moderator)
         });
+        
+        rodComboBox.setSize(new Dimension(100,25));
 
         selectedRod = rodService.GetRod(RodModelStyle.ControlRod);
         rodComboBox.setSelectedItem(selectedRod.GetRodName());
@@ -169,7 +172,7 @@ public class NPPS extends JFrame
             FuelRodComboBoxChange(e);
         });
 
-        rodSlider = new JSlider(JSlider.VERTICAL, 0, 100, sliderValue);
+        rodSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, sliderValue);
         rodSlider.addChangeListener(e -> {
             RodSliderChange(e);
         });
@@ -179,12 +182,15 @@ public class NPPS extends JFrame
 
         rodLevelLabel = new JLabel("Rod Level: " + sliderValue);
 
+        //controlsPanel.add(new JSeparator(SwingConstants.VERTICAL));
         controlsPanel.add(new JLabel("Selected Rod:"));
         controlsPanel.add(rodComboBox);
 
+        //controlsPanel.add(new JSeparator(SwingConstants.VERTICAL));
         controlsPanel.add(fuelRodLabel);
         controlsPanel.add(fuelRodComboBox);
 
+        //controlsPanel.add(new JSeparator(SwingConstants.VERTICAL));
         controlsPanel.add(rodLevelLabel);
         controlsPanel.add(rodSlider);
 
@@ -218,9 +224,42 @@ public class NPPS extends JFrame
 
         dateTimer.start();
 
+        CreateScramButton();
+        
         AddControlsToPanel(viewPanelLayerd, controlsPanel, gaugePanel, reactor);
         CreateMenuBar();
         contentPane.add(viewPanelLayerd);
+    }
+
+    private void CreateScramButton()
+    {
+        //SCRAM Button
+        var scramButton = new JButton("SCRAM");
+        scramButton.setSize(new Dimension(400 , 125));
+        scramButton.setBackground(Color.red);
+        scramButton.setLocation(300,680 );
+        scramButton.setFont(new Font(scramButton.getName(), Font.BOLD, 28));
+        scramButton.addActionListener(e-> 
+        {
+            rodService.Scram();
+            UpdateRods();
+         });
+
+        viewPanelLayerd.add(scramButton);
+    }
+
+    private void UpdateRods()
+    {
+        sliderValue = 100;
+        controlRods.setBounds(0, 132, 1000, sliderValue * 3);
+        rodSlider.setValue(sliderValue);
+        sliderValue = 0;
+        fuelRod0.setBounds(406, 132, 20, sliderValue * 3);
+        fuelRod1.setBounds(436, 132, 20, sliderValue * 3);
+        fuelRod2.setBounds(466, 132, 20, sliderValue * 3);
+        fuelRod3.setBounds(496, 132, 20, sliderValue * 3);
+        fuelRod4.setBounds(526, 132, 20, sliderValue * 3);
+        fuelRod5.setBounds(556, 132, 20, sliderValue * 3);
     }
 
     private void CreateDateLabel(JPanel gaugePanel)
@@ -299,7 +338,7 @@ public class NPPS extends JFrame
 
     private void OpenBudegtWindow()
     {
-        budgetWindow = new BudgetingFrame();
+        budgetWindow = new BudgetFrame();
         viewPanelLayerd.add(budgetWindow);
         budgetWindow.setVisible(true);
     }
@@ -424,11 +463,15 @@ public class NPPS extends JFrame
         fuelRodEnergy5.setFont(new Font(fuelRodEnergy5.getName(), Font.PLAIN, 18));
         fuelRodEnergy5.setForeground(Color.black);
         fuelRodEnergy5.setToolTipText("Fuelrod 6 info");
+
+        var contextMenu = new ContextMenuListener(5);
+        fuelRodEnergy5.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodEnergy5);
 
         fuelRodBar5 = new JProgressBar(0, 100);
         fuelRodBar5.setPreferredSize(new Dimension(300, 25));
         fuelRodBar5.setForeground(fuelRodColour);
+        fuelRodBar5.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodBar5);
 
         gaugeDecayPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
@@ -445,11 +488,15 @@ public class NPPS extends JFrame
         fuelRodEnergy4.setFont(new Font(fuelRodEnergy4.getName(), Font.PLAIN, 18));
         fuelRodEnergy4.setToolTipText("Fuelrod 5 info");
         fuelRodEnergy4.setForeground(Color.black);
+
+        var contextMenu = new ContextMenuListener(4);
+        fuelRodEnergy4.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodEnergy4);
 
         fuelRodBar4 = new JProgressBar(0, 100);
         fuelRodBar4.setPreferredSize(new Dimension(300, 25));
         fuelRodBar4.setForeground(fuelRodColour);
+        fuelRodBar4.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodBar4);
         gaugeDecayPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         gaugePanel.add(gaugeDecayPanel);
@@ -465,11 +512,15 @@ public class NPPS extends JFrame
         fuelRodEnergy3.setFont(new Font(fuelRodEnergy3.getName(), Font.PLAIN, 18));
         fuelRodEnergy3.setToolTipText("Fuelrod 4 info");
         fuelRodEnergy3.setForeground(Color.black);
+
+        var contextMenu = new ContextMenuListener(3);
+        fuelRodEnergy3.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodEnergy3);
 
         fuelRodBar3 = new JProgressBar(0, 100);
         fuelRodBar3.setPreferredSize(new Dimension(300, 25));
         fuelRodBar3.setForeground(fuelRodColour);
+        fuelRodBar3.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodBar3);
         gaugeDecayPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         gaugePanel.add(gaugeDecayPanel);
@@ -485,11 +536,15 @@ public class NPPS extends JFrame
         fuelRodEnergy2.setFont(new Font(fuelRodEnergy2.getName(), Font.PLAIN, 18));
         fuelRodEnergy2.setToolTipText("Fuelrod 3 info");
         fuelRodEnergy2.setForeground(Color.black);
+
+        var contextMenu = new ContextMenuListener(2);
+        fuelRodEnergy2.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodEnergy2);
 
         fuelRodBar2 = new JProgressBar(0, 100);
         fuelRodBar2.setPreferredSize(new Dimension(300, 25));
         fuelRodBar2.setForeground(fuelRodColour);
+        fuelRodBar2.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodBar2);
         gaugeDecayPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         gaugePanel.add(gaugeDecayPanel);
@@ -505,11 +560,15 @@ public class NPPS extends JFrame
         fuelRodEnergy1.setFont(new Font(fuelRodEnergy1.getName(), Font.PLAIN, 18));
         fuelRodEnergy1.setToolTipText("Fuelrod 2 info");
         fuelRodEnergy1.setForeground(Color.black);
+
+        var contextMenu = new ContextMenuListener(1);
+        fuelRodEnergy1.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodEnergy1);
 
         fuelRodBar1 = new JProgressBar(0, 100);
         fuelRodBar1.setPreferredSize(new Dimension(300, 25));
         fuelRodBar1.setForeground(fuelRodColour);
+        fuelRodBar1.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodBar1);
         gaugeDecayPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         gaugePanel.add(gaugeDecayPanel);
@@ -526,13 +585,14 @@ public class NPPS extends JFrame
         fuelRodEnergy0.setToolTipText("Fuelrod 1 info");
         fuelRodEnergy0.setForeground(Color.black);
 
-        var asd = new ContextMenuListener(0);
-        fuelRodEnergy0.addMouseListener(asd);
+        var contextMenu = new ContextMenuListener(0);
+        fuelRodEnergy0.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodEnergy0);
 
         fuelRodBar0 = new JProgressBar(0, 100);
         fuelRodBar0.setPreferredSize(new Dimension(300, 25));
         fuelRodBar0.setForeground(fuelRodColour);
+        fuelRodBar0.addMouseListener(contextMenu);
         gaugeDecayPanel.add(fuelRodBar0);
         gaugeDecayPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         gaugePanel.add(gaugeDecayPanel);
@@ -555,29 +615,40 @@ public class NPPS extends JFrame
         propImg.setBounds(80, 440, 138, 131);
         propImg.setVisible(true);
 
-        var fuelRodImg0 = ImageIO.read(new File("./Images/fuelRod0.png"));
-        fuelRod0 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod0.setBounds(0, 132, 1000, 0);
+        fuelRod0 = new JLabel();
+        fuelRod0.setBackground(fuelRodColour);
+        fuelRod0.setOpaque(true);
+        fuelRod0.setBounds(406, 132, 20, 0);
         fuelRod0.setVisible(true);
 
-        fuelRod1 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod1.setBounds(0, 132, 1060, 0);
+        fuelRod1 = new JLabel();
+        fuelRod1.setBackground(fuelRodColour);
+        fuelRod1.setOpaque(true);
+        fuelRod1.setBounds(436, 132, 20, 0);
         fuelRod1.setVisible(true);
 
-        fuelRod2 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod2.setBounds(0, 132, 1120, 0);
+        fuelRod2 = new JLabel();
+        fuelRod2.setBackground(fuelRodColour);
+        fuelRod2.setOpaque(true);
+        fuelRod2.setBounds(466, 132, 20, 0);
         fuelRod2.setVisible(true);
 
-        fuelRod3 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod3.setBounds(0, 132, 1180, 0);
+        fuelRod3 = new JLabel();
+        fuelRod3.setBackground(fuelRodColour);
+        fuelRod3.setOpaque(true);
+        fuelRod3.setBounds(496, 132, 20, 0);
         fuelRod3.setVisible(true);
 
-        fuelRod4 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod4.setBounds(0, 132, 1240, 0);
+        fuelRod4 = new JLabel();
+        fuelRod4.setBackground(fuelRodColour);
+        fuelRod4.setOpaque(true);
+        fuelRod4.setBounds(526, 132, 20, 0);
         fuelRod4.setVisible(true);
 
-        fuelRod5 = new JLabel(new ImageIcon(fuelRodImg0));
-        fuelRod5.setBounds(0, 132, 1300, 0);
+        fuelRod5 = new JLabel();
+        fuelRod5.setBackground(fuelRodColour);
+        fuelRod5.setOpaque(true);
+        fuelRod5.setBounds(556, 132, 20, 0);
         fuelRod5.setVisible(true);
 
         var controlrodsImg = ImageIO.read(new File("./Images/controlRods.png"));
@@ -598,7 +669,6 @@ public class NPPS extends JFrame
         SetFuelRodBar();
         StartStopProp();
         CoolDown();
-
     }
 
     private void RunDateTimer()
@@ -877,32 +947,32 @@ public class NPPS extends JFrame
             case FuelRod:
                 if (selectedRod.GetRodName().equals("1"))
                 {
-                    fuelRod0.setBounds(0, 132, 1000, sliderValue * 3);
+                    fuelRod0.setBounds(406, 132, 20, sliderValue * 3);
                 }
 
                 if (selectedRod.GetRodName().equals("2"))
                 {
-                    fuelRod1.setBounds(0, 132, 1060, sliderValue * 3);
+                    fuelRod1.setBounds(436, 132, 20, sliderValue * 3);
                 }
 
                 if (selectedRod.GetRodName().equals("3"))
                 {
-                    fuelRod2.setBounds(0, 132, 1120, sliderValue * 3);
+                    fuelRod2.setBounds(466, 132, 20, sliderValue * 3);
                 }
 
                 if (selectedRod.GetRodName().equals("4"))
                 {
-                    fuelRod3.setBounds(0, 132, 1180, sliderValue * 3);
+                    fuelRod3.setBounds(496, 132, 20, sliderValue * 3);
                 }
 
                 if (selectedRod.GetRodName().equals("5"))
                 {
-                    fuelRod4.setBounds(0, 132, 1240, sliderValue * 3);
+                    fuelRod4.setBounds(526, 132, 20, sliderValue * 3);
                 }
 
                 if (selectedRod.GetRodName().equals("6"))
                 {
-                    fuelRod5.setBounds(0, 132, 1300, sliderValue * 3);
+                    fuelRod5.setBounds(556, 132, 20, sliderValue * 3);
                 }
                 break;
             case Moderator:

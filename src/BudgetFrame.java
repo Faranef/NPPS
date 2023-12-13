@@ -4,12 +4,12 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BudgetingFrame extends JInternalFrame
+public class BudgetFrame extends JInternalFrame
 {
-    private EconomyService economyService;
+    private BudgetService economyService;
     private List<BudgetModel> budgetList = new ArrayList<BudgetModel>();
 
-    public BudgetingFrame() 
+    public BudgetFrame() 
     {
         GetServices();
         budgetList = economyService.GetBudgetList();
@@ -34,49 +34,43 @@ public class BudgetingFrame extends JInternalFrame
         for (BudgetModel budgetModel : list) 
         {
             JPanel bugetPanel = new JPanel();
-            JPanel panelIncome = IncomePanel(budgetModel);
-            JPanel panelLoss = LossPanel(budgetModel);
+            JPanel panelIncome = TotalPanel(budgetModel);
             bugetPanel.add(panelIncome, BorderLayout.NORTH);
-            bugetPanel.add(new JSeparator(), BorderLayout.NORTH);
-            bugetPanel.add(panelLoss, BorderLayout.NORTH);
             tabbedPane.addTab(budgetModel.toString(),bugetPanel);
         }
         
         this.add(tabbedPane);
     }
 
-    private JPanel LossPanel(BudgetModel budgetModel)
+    private JPanel TotalPanel(BudgetModel budgetModel)
     {
-        JPanel panelLoss = new JPanel();
-        panelLoss.setLayout(new GridLayout(0,3));
-        panelLoss.add(new Label("Loss:"));
-        panelLoss.add(new Label());
-        panelLoss.add(new Label());
-        panelLoss.add(new Label());
-        panelLoss.add(new Label("Running Costs:"));
-        panelLoss.add(new Label(Double.toString(budgetModel.GetTotalLoss())));
-        panelLoss.add(new Label());
-        panelLoss.add(new Label("Fuelrods:"));
-        panelLoss.add(new Label(Double.toString(budgetModel.GetFuelRodPrice())));
-        return panelLoss;
-    }
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(0,3));
+        panel.add(new Label("Income:"));
+        panel.add(new Label("Electricity sold:"));
+        panel.add(new Label(Double.toString(budgetModel.GetSoldElectricity())));
+        panel.add(new Label());
+        panel.add(new Label());
+        panel.add(new Label());
+        panel.add(new Label("Loss:"));
+        panel.add(new Label("Running Costs:"));
+        panel.add(new Label(Double.toString(budgetModel.GetTotalLoss())));
+        panel.add(new Label());
+        panel.add(new Label("Fuelrods:"));
+        panel.add(new Label(Double.toString(budgetModel.GetFuelRodPrice())));
+        panel.add(new Label());
+        panel.add(new Label());
+        panel.add(new Label());
+        panel.add(new Label("Total:"));
+        panel.add(new Label());
+        panel.add(new Label(Double.toString(budgetModel.Budget)));
 
-    private JPanel IncomePanel(BudgetModel budgetModel)
-    {
-        JPanel panelIncome = new JPanel();
-        panelIncome.setLayout(new GridLayout(0,3));
-        panelIncome.add(new Label("Income:"));
-        panelIncome.add(new Label());
-        panelIncome.add(new Label());
-        panelIncome.add(new Label());
-        panelIncome.add(new Label("Electricity sold:"));
-        panelIncome.add(new Label(Double.toString(budgetModel.GetSoldElectricity())));
-        return panelIncome;
+        return panel;
     }
 
     private void GetServices()
     {
-        economyService = EconomyService.GetInstance();
+        economyService = BudgetService.GetInstance();
     }
 
     private void CreateFrame()

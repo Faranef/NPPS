@@ -1,8 +1,8 @@
 import java.util.*;
 
-public class EconomyService 
+public class BudgetService 
 {
-    private static EconomyService Instance = null;
+    private static BudgetService Instance = null;
     private List<BudgetModel> BudgetList = new ArrayList<BudgetModel>();
 
     public List<BudgetModel> GetBudgetList()
@@ -28,10 +28,11 @@ public class EconomyService
         budgetModel.SetBudget(currentBudget);
         budgetModel.SetCurrentMonth(month + 1);
         budgetModel.SetCurrentYear(year);
+        budgetModel.SetFuelRodPrice(50000);
         BudgetList.add(budgetModel);
     }
 
-    private EconomyService() 
+    private BudgetService() 
     {
         Calendar cal = Calendar.getInstance();
         var month = cal.get(Calendar.MONTH);
@@ -39,11 +40,11 @@ public class EconomyService
         CreateBudgetModel(100000.00,month,year);
     }
 
-    public static EconomyService GetInstance()
+    public static BudgetService GetInstance()
     {
         if(Instance == null)
         {
-            Instance = new EconomyService();
+            Instance = new BudgetService();
         }
 
         return Instance;

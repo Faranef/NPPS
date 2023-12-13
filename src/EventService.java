@@ -1,13 +1,13 @@
 public class EventService 
 {
     private static EventService Instance = null;
-    private EconomyService economyService;
+    private BudgetService economyService;
     private RodService rodService;
     private ReactorService reactorService;
 
     private EventService() 
     {
-        economyService = EconomyService.GetInstance();
+        economyService = BudgetService.GetInstance();
         rodService = RodService.GetInstance();
         reactorService = ReactorService.GetInstance();
     }

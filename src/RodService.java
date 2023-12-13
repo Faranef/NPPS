@@ -4,12 +4,12 @@ public class RodService
 {
     private static RodService Instance = null;
     private List<RodModel> rodList = new ArrayList<RodModel>();
-    private EconomyService economyService;
+    private BudgetService economyService;
     
     
     private RodService() 
     {
-        economyService = EconomyService.GetInstance();
+        economyService = BudgetService.GetInstance();
     }
 
     public static RodService GetInstance()
@@ -101,6 +101,7 @@ public class RodService
 
         var fuelRod = fuelRodList.GetRodModelList().get(fuelRodId);
 
+        // replace also active fuel rods?
         if(fuelRod.IsActive() == false)
         {
             fuelRod.SetActivity(true);
@@ -109,7 +110,21 @@ public class RodService
             
             var budget = economyService.GetLastBudgetList();
             var rodPrice = budget.GetFuelRodPrice();
+            budget.Deduct(rodPrice);
         }
 
+    }
+
+    public void Scram()
+    {
+        Optional<RodModel> fuelRod = rodList.stream().filter(x -> x.GetRodStyle() == RodModelStyle.FuelRod).findFirst();
+
+        for (RodModel rodModel : fuelRod.get().GetRodModelList())
+        {
+            rodModel.SetRodLevel(0);
+        }
+
+        Optional<RodModel> controlRod = rodList.stream().filter(x -> x.GetRodStyle() == RodModelStyle.ControlRod).findFirst();
+        controlRod.get().SetRodLevel(100);
     }
 }

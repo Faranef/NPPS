@@ -12,6 +12,11 @@ public class BudgetModel
         Budget += budget;
     }
 
+    public void Deduct(double value)
+    {
+        Budget -= value;
+    }
+
     private double SoldElectricity = 0;
     private double MiscellaneausIncome = 0;
     private double TotalIncome = 0;
@@ -121,4 +126,6 @@ public class BudgetModel
     {
         return Integer.toString(CurrentMonth) + "/" + Integer.toString(CurrentYear);
     }
+
+
 }
