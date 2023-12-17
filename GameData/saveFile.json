@@ -1,9 +1,16 @@
 {
-    "tempValue":"250.00",
-    "wattage":"1005.5",
-    "balance":"5000.25",
-    "totalProfit" :"123.25",
-    "totalLoss":"123.25",
-    "date":"2023-11-26",
-    "fuelRodPrice" : "50000.00"
+    "budget" : 50000.00,
+    "soldElectricity" : 50000.00,
+    "miscellaneausIncome" : 50000.00,
+    "totalIncome" : 50000.00,
+    "fuelRodPrice" : 50000.00,
+    "maintenance" : 50000.00,
+    "miscellaneausLoss" : 50000.00,
+    "totalLoss" : 50000.00,
+    "currentMonth" : 12,
+    "currentYear" : 2023,
+    "rodName" : "1",
+    "rodLevel" : 100,
+    "lifeSpan" : 10000,
+    "isActive" : true
 }

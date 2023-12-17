@@ -1,6 +1,17 @@
 public class BudgetModel 
 {
     public double Budget;
+    private double SoldElectricity = 0;
+    private double MiscellaneausIncome = 0;
+    private double TotalIncome = 0;
+    
+    private double FuelRodPrice = 0;
+    private double Maintenance = 0;
+    private double MiscellaneausLoss = 0;
+    private double TotalLoss = 0;
+
+    private int CurrentMonth;
+    private int CurrentYear;
     
     public double GetBudget()
     {
@@ -17,17 +28,6 @@ public class BudgetModel
         Budget -= value;
     }
 
-    private double SoldElectricity = 0;
-    private double MiscellaneausIncome = 0;
-    private double TotalIncome = 0;
-    
-    private double FuelRodPrice = 0;
-    private double Maintenance = 0;
-    private double MiscellaneausLoss = 0;
-    private double TotalLoss = 0;
-
-    private int CurrentMonth;
-    private int CurrentYear;
 
     public int GetCurrentYear()
     {

@@ -37,6 +37,7 @@ public class NPPS extends JFrame
     private ReactorService reactorService;
     private BudgetService economyService;
     private EventService eventService;
+    private LoadSaveService loadSaveService;
     private JLabel fuelRod0;
     private JLabel fuelRod1;
     private JLabel fuelRod2;
@@ -77,6 +78,7 @@ public class NPPS extends JFrame
         setPreferredSize(new Dimension(1440, 900));
         economyService = BudgetService.GetInstance();
         rodService = RodService.GetInstance();
+        loadSaveService = LoadSaveService.GetInstance();
         CreateRods();
         reactorService = ReactorService.GetInstance();
         eventService = EventService.GetInstance();
@@ -214,7 +216,7 @@ public class NPPS extends JFrame
 
         spinnerTimer = new Timer(100, e -> {
             double rotationAngle = 0;
-            rotationAngle += Math.toRadians(36); // Adjust the rotation speed
+            rotationAngle += Math.toRadians(36); // rotation speed
             propImg.setIcon(GetRotatedIcon(rotationAngle));
         });
 
@@ -345,15 +347,17 @@ public class NPPS extends JFrame
 
     private void LoadGame()
     {
-        // load values from a json file
-        final JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(".\\GameData"));
+        // // load values from a json file
+        // final JFileChooser fileChooser = new JFileChooser();
+        // fileChooser.setCurrentDirectory(new File(".\\GameData"));
 
-        var filter = new FileNameExtensionFilter("JSON", "json");
-        fileChooser.addChoosableFileFilter(filter);
-        fileChooser.showOpenDialog(this);
+        // var filter = new FileNameExtensionFilter("JSON", "json");
+        // fileChooser.addChoosableFileFilter(filter);
+        // fileChooser.showOpenDialog(this);
         
-        File file = fileChooser.getSelectedFile();
+        // File file = fileChooser.getSelectedFile();
+
+        loadSaveService.LoadGame();
     }
 
     private void SaveGame()

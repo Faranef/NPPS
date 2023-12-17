@@ -1,9 +1,18 @@
 {
     "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ],
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "jackson-databind-2.16.0.jar",
+            "jackson-databind-2.16.0-sources.jar",
+            "jackson-core-2.15.2.jar",
+            "jackson-annotations-2.15.2.jar"
+        ],
+        "exclude": [
+            "f:\\UNI\\GUI\\Project\\jackson-databind-2.16.0.jar"
+        ]
+    },
     "java.format.settings.url": "https://gist.githubusercontent.com/fbricon/c5960a86f0a21405a61b79c0f1b4a0fc/raw/16b9b75077d08ae8b36706718a8393268d2ea5d2/formatter.xml",
     "java.debug.settings.onBuildFailureProceed": true
 }
