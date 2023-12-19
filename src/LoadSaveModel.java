@@ -92,7 +92,6 @@ public class LoadSaveModel
     {
         this.totalLoss = totalLoss;
     }
-    
 
     public int getCurrentMonth()
     {
@@ -103,8 +102,6 @@ public class LoadSaveModel
         this.currentMonth = currentMonth;
     }
 
-
-
     public int getCurrentYear()
     {
         return currentYear;
@@ -113,6 +110,7 @@ public class LoadSaveModel
     {
         this.currentYear = currentYear;
     }
+
 
     
     public int getRodLevel()
@@ -124,7 +122,6 @@ public class LoadSaveModel
         this.rodLevel = rodLevel;
     }
 
-
     public double getLifeSpan()
     {
         return lifeSpan;
@@ -133,7 +130,6 @@ public class LoadSaveModel
     {
         this.lifeSpan = lifeSpan;
     }
-
     
     public String getRodName()
     {
@@ -143,7 +139,6 @@ public class LoadSaveModel
     {
         this.rodName = rodName;
     }
-
 
     public boolean isIsActive()
     {

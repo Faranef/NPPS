@@ -61,7 +61,7 @@ public class NPPS extends JFrame
     private JProgressBar fuelRodBar4;
     private JProgressBar fuelRodBar5;
     private JDialog dialog;
-    private JInternalFrame budgetWindow;
+    private JInternalFrame researchWindow;
     private double tempValue;
     private int wattValue;
     private int timerDelay = 1000;
@@ -335,14 +335,26 @@ public class NPPS extends JFrame
         menuItem.addActionListener(e -> { OpenBudegtWindow(); });
         menu.add(menuItem);
 
+        menuItem = new JMenuItem("Research", KeyEvent.VK_R);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+        menuItem.addActionListener(e -> { OpenResearchWindow(); });
+        menu.add(menuItem);
+
         setJMenuBar(menuBar);
+    }
+
+    private void OpenResearchWindow()
+    {
+        researchWindow = new ResearchFrame();
+        viewPanelLayerd.add(researchWindow);
+        researchWindow.setVisible(true);
     }
 
     private void OpenBudegtWindow()
     {
-        budgetWindow = new BudgetFrame();
-        viewPanelLayerd.add(budgetWindow);
-        budgetWindow.setVisible(true);
+        researchWindow = new BudgetFrame();
+        viewPanelLayerd.add(researchWindow);
+        researchWindow.setVisible(true);
     }
 
     private void LoadGame()
