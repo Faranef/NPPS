@@ -1,28 +1,66 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TechnologyModel 
+public class TechnologyModel implements Serializable
 {
-    private List<TechnologyModel>  DependingTechnology;
-    private double ResearchCost;
-    private int ResearchTime;
-    private boolean IsResearched;
-    private String ResearchName;
-    private String ResearchDescription;
-    private String ImagePath;
-    private TechnologyModelStyle TechnologyStyle;
-    
-    public TechnologyModel(double cost, int researchTime, boolean isResearched, String name, String description, String imagePath, TechnologyModelStyle technologyStyle) 
+    public List<TechnologyModel>  DependingTechnology;
+    public double ResearchCost;
+    public boolean IsResearched;
+    public String ResearchName;
+    public String ResearchDescription;
+    public String LogoPath;
+    public String LogoPathFinished;
+    public TechnologyModelStyle TechnologyStyle;
+    public int TechId;
+    public String Effects;
+    public String ImagePath;
+
+    public TechnologyModel() 
+    {
+    }
+
+    public TechnologyModel(double cost, boolean isResearched, String name, String description, String logoPath, 
+                           TechnologyModelStyle technologyStyle, int techId, String effects,
+                           String imagePath, String logoPathFinished) 
     {
         ResearchCost = cost;
-        ResearchTime = researchTime;
         IsResearched = isResearched;
         ResearchName = name;
         ResearchDescription = description;
-        ImagePath = imagePath;
+        LogoPath = logoPath;
         TechnologyStyle = technologyStyle;
+        TechId = techId;
+        Effects = effects;
+        ImagePath = imagePath;
+        LogoPathFinished = logoPathFinished;
     }
-    
+
+        public String GetLogoPathFinished()
+    {
+        return LogoPathFinished;
+    }
+
+    public void SetLogoPathFinished(String logoPathFinished)
+    {
+        LogoPathFinished = logoPathFinished;
+    }
+           
+    public String GetImagePath()
+    {
+        return ImagePath;
+    }
+
+    public void SetImagePath(String imagePath)
+    {
+        ImagePath = imagePath;
+    }
+
+    public int GetTechId()
+    {
+        return TechId;
+    }
+
     public TechnologyModelStyle GetTechnologyStyle()
     {
         return TechnologyStyle;
@@ -43,14 +81,14 @@ public class TechnologyModel
         DependingTechnology.add(tech);
     }
     
-    public String GetImagePath()
+    public String GetLogoPath()
     {
-        return ImagePath;
+        return LogoPath;
     }
 
-    public void SetImagePath(String imagePath)
+    public void SetLogoPath(String imagePath)
     {
-        ImagePath = imagePath;
+        LogoPath = imagePath;
     }
 
     public String GetResearchName()
@@ -85,21 +123,18 @@ public class TechnologyModel
     {
         ResearchCost = researchCost;
     }
-    public int GetResearchTime()
-    {
-        return ResearchTime;
-    }
-    public void SetResearchTime(int researchTime)
-    {
-        ResearchTime = researchTime;
-    }
     public boolean IsResearched()
     {
         return IsResearched;
     }
-    public void setIsResearched(boolean isResearched)
+    public void SetIsResearched(boolean isResearched)
     {
         IsResearched = isResearched;
+    }
+
+    public String GetResearchEffect()
+    {
+        return Effects;
     }
     
 }

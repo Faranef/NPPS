@@ -17,7 +17,8 @@ public class ContextMenu extends JPopupMenu
     {
         rodService = RodService.GetInstance();
         item = new JMenuItem("Replace");
-        item.addActionListener(e -> {
+        item.addActionListener(e -> 
+        {
             rodService.ReplaceFuelRodById(id);
         });
         add(item);

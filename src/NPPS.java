@@ -30,12 +30,13 @@ public class NPPS extends JFrame
     private JLabel rodLevelLabel;
     private JLabel dateLabel;
     private JLabel waterImg;
+    private JLabel reactorImg;
     private JLabel propImg;
     private JSlider rodSlider;
     private int sliderValue;
     private RodService rodService;
     private ReactorService reactorService;
-    private BudgetService economyService;
+    private BudgetService budgetService;
     private EventService eventService;
     private LoadSaveService loadSaveService;
     private JLabel fuelRod0;
@@ -61,8 +62,10 @@ public class NPPS extends JFrame
     private JProgressBar fuelRodBar4;
     private JProgressBar fuelRodBar5;
     private JDialog dialog;
+    private JInternalFrame budgetWindow;
     private JInternalFrame researchWindow;
     private double tempValue;
+    private double maintenanceCost;
     private int wattValue;
     private int timerDelay = 1000;
     private List<RodModel> fuelRodList;
@@ -76,13 +79,13 @@ public class NPPS extends JFrame
         super(name);
         setResizable(false);
         setPreferredSize(new Dimension(1440, 900));
-        economyService = BudgetService.GetInstance();
+        budgetService = BudgetService.GetInstance();
         rodService = RodService.GetInstance();
         loadSaveService = LoadSaveService.GetInstance();
         CreateRods();
         reactorService = ReactorService.GetInstance();
         eventService = EventService.GetInstance();
-
+        maintenanceCost = budgetService.GetMaintenanceCost();
     }
 
     private void CreateRods()
@@ -239,8 +242,12 @@ public class NPPS extends JFrame
         var scramButton = new JButton("SCRAM");
         scramButton.setSize(new Dimension(400 , 125));
         scramButton.setBackground(Color.red);
+        scramButton.setForeground(Color.white);
         scramButton.setLocation(300,680 );
         scramButton.setFont(new Font(scramButton.getName(), Font.BOLD, 28));
+        scramButton.setMargin(new Insets(0, 0, 0, 0));
+        scramButton.setBorder(null);
+        scramButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         scramButton.addActionListener(e-> 
         {
             rodService.Scram();
@@ -340,36 +347,94 @@ public class NPPS extends JFrame
         menuItem.addActionListener(e -> { OpenResearchWindow(); });
         menu.add(menuItem);
 
+        menu.addSeparator();
+
+        menuItem = new JMenuItem("Help", KeyEvent.VK_H);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
+        menuItem.addActionListener(e -> { OpenHelpDisplay(); });
+        menu.add(menuItem);
+
         setJMenuBar(menuBar);
+    }
+
+    private void OpenHelpDisplay()
+    {
+
+        var dialog = new JDialog(this, "Help", false);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setSize(250, 50);
+        var text = new JTextArea();
+        text.setFont(new Font(text.getName(), Font.PLAIN, 16));
+        text.setEditable(false);
+        text.setForeground(Color.BLACK);
+        text.setText("\n"+
+                     "     - Each fuel rod can be controlled separately.\n"+
+                     "     - Selecte Fuel Rod in the first drop down to get the optoin to select fuel rods   \n"+
+                     "     - The control rods are there to regulate the reaction.\n"+
+                     "     \n"+
+                     "     - All the rods are moved by the slider.\n"+
+                     "     - There is a 'SCRAM' button for emergency shut downs\n"+
+                     "     \n"+
+                     "     - On the rihgt hand side you have an overview of the temperature.\n"+
+                     "       as well the wattage generated and the lifespan of each fuel rod.\n"+
+                     "     - Here as well you can replace the fuel rods if they run out.\n"+
+                     "       simple right mouse click and replace."+
+                     "     \n"+
+                     "     \n"+
+                     "     - There are two more views:\n"+
+                     "          - Budget\n"+
+                     "          - Research\n"+
+                     "     \n"+
+                     "     - Under budget you can see the monthly income and loss\n"+
+                     "     - Under research you can research new technologies.\n"+
+                     "     \n"+
+                     "     - You can save your game. (save as a josn file)"+
+                     "     \n\n\n"+
+                     "     - What's still missing:\n"+
+                     "          - In game event system\n"+
+                     "          - Loading a saved games.\n"+
+                     "          - Add more tech to research like different kind of fuel rods. (uranium, plutonium,...)    \n"+
+                     "          - And a few bugs need to be fixed as well.\n");
+
+
+        dialog.add(text, BorderLayout.CENTER);
+
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+
     }
 
     private void OpenResearchWindow()
     {
-        researchWindow = new ResearchFrame();
-        viewPanelLayerd.add(researchWindow);
+        if (researchWindow == null) 
+        {
+            researchWindow = new ResearchFrame();
+            viewPanelLayerd.add(researchWindow);
+        }
+
         researchWindow.setVisible(true);
     }
 
     private void OpenBudegtWindow()
     {
-        researchWindow = new BudgetFrame();
-        viewPanelLayerd.add(researchWindow);
-        researchWindow.setVisible(true);
+        budgetWindow = new BudgetFrame();
+        viewPanelLayerd.add(budgetWindow);
+        budgetWindow.setVisible(true);
     }
 
     private void LoadGame()
     {
-        // // load values from a json file
-        // final JFileChooser fileChooser = new JFileChooser();
-        // fileChooser.setCurrentDirectory(new File(".\\GameData"));
+        // load values from a json file
+        final JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(".\\GameData"));
 
-        // var filter = new FileNameExtensionFilter("JSON", "json");
-        // fileChooser.addChoosableFileFilter(filter);
-        // fileChooser.showOpenDialog(this);
+        var filter = new FileNameExtensionFilter("JSON", "json");
+        fileChooser.addChoosableFileFilter(filter);
+        fileChooser.showOpenDialog(this);
         
-        // File file = fileChooser.getSelectedFile();
-
-        loadSaveService.LoadGame();
+        File file = fileChooser.getSelectedFile();
+        loadSaveService.LoadGame(file);
     }
 
     private void SaveGame()
@@ -380,9 +445,14 @@ public class NPPS extends JFrame
 
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) 
         {
-            File file = fileChooser.getSelectedFile();
-            var filter = new FileNameExtensionFilter("JSON", "json");
-            fileChooser.addChoosableFileFilter(filter);
+            File selectedFile = fileChooser.getSelectedFile();
+            var filePath = selectedFile.getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".json")) 
+            {
+                selectedFile = new File(filePath + ".json");
+            }
+
+            loadSaveService.SaveGame(selectedFile, gameDate);
             // save to file
         }
 
@@ -617,9 +687,10 @@ public class NPPS extends JFrame
     private JLabel CreateImages() throws IOException
     {
         var img = ImageIO.read(new File("./Images/case.png"));
-        JLabel reactor = new JLabel(new ImageIcon(img));
-        reactor.setBounds(0, 0, 1000, 600);
-        reactor.setVisible(true);
+        reactorImg = new JLabel(new ImageIcon(img));
+        reactorImg.setBounds(0, 0, 1000, 600);
+        reactorImg.setVisible(true);
+        reactorImg.setName("Reactor");
 
         var imgCold = ImageIO.read(new File("./Images/water00.png"));
         waterImg = new JLabel(new ImageIcon(imgCold));
@@ -672,7 +743,7 @@ public class NPPS extends JFrame
         controlRods.setBounds(0, 132, 1000, sliderValue * 3);
         controlRods.setVisible(true);
 
-        return reactor;
+        return reactorImg;
     }
 
     private void TimerAction(ActionEvent e) throws IOException
@@ -685,6 +756,14 @@ public class NPPS extends JFrame
         SetFuelRodBar();
         StartStopProp();
         CoolDown();
+        MaintenanceCost();
+    }
+
+    private void MaintenanceCost()
+    {
+        //var
+        budgetService.GetLastBudgetFromList().Deduct(maintenanceCost);
+        budgetService.GetLastBudgetFromList().SetMaintenance(maintenanceCost);
     }
 
     private void RunDateTimer()
@@ -724,11 +803,11 @@ public class NPPS extends JFrame
         if (month != tempMonth) 
         {
             tempGameDate = gameDate;
-            var budget = economyService.GetLastBudgetList().Budget;
+            var budget = budgetService.GetLastBudgetFromList().GetBudget();
 
             if ( tempMonth != -1) 
             {
-               economyService.CreateBudgetModel(budget,month,year);
+               budgetService.CreateBudgetModel(budget,month,year);
                tempMonth = month;
             }
         }
@@ -898,7 +977,7 @@ public class NPPS extends JFrame
     {
         if (dialog == null || !dialog.isVisible())
         {
-            dialog = new JDialog(this, "Warning!", false); // Set non-modal to interact with main window
+            dialog = new JDialog(this, "Warning!", false);
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setSize(250, 50);
             JLabel label = new JLabel("Temperature is getting too high!");

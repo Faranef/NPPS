@@ -1,13 +1,18 @@
+import java.io.Serializable;
 import java.util.*;
 
-public class RodModel
+public class RodModel implements Serializable
 {
-    private int RodLevel;
-    private double LifeSpan;
-    private String RodName;
-    private boolean IsActive;
-    private RodModelStyle Style;
-    private List<RodModel> RodModelList = new ArrayList<RodModel>();
+    public int RodLevel;
+    public double LifeSpan;
+    public String RodName;
+    public boolean IsActive;
+    public RodModelStyle Style;
+    public List<RodModel> RodModelList = new ArrayList<RodModel>();
+
+    public RodModel() 
+    {
+    }
 
     public String GetRodName()
     {

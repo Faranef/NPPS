@@ -102,14 +102,16 @@ public class RodService
         var fuelRod = fuelRodList.GetRodModelList().get(fuelRodId);
 
         // replace also active fuel rods?
-        if(fuelRod.IsActive() == false)
+        //if(fuelRod.IsActive() == false)
         {
             fuelRod.SetActivity(true);
             fuelRod.SetRodLevel(0);
             fuelRod.SetLifeSpan(100000);
             
-            var budget = economyService.GetLastBudgetList();
-            var rodPrice = budget.GetFuelRodPrice();
+            var budget = economyService.GetLastBudgetFromList();
+            var rodPrice = economyService.GetFuelRodPrice();
+            
+            budget.SetFuelRodTotalCost(rodPrice);;
             budget.Deduct(rodPrice);
         }
 

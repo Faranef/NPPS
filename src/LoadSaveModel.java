@@ -1,171 +1,98 @@
-public class LoadSaveModel 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LoadSaveModel implements Serializable
 {
-    private double budget;
-    private double soldElectricity = 0;
-    private double miscellaneausIncome = 0;
-    private double totalIncome = 0;
-    private double fuelRodPrice = 0;
-    private double maintenance = 0;
-    private double miscellaneausLoss = 0;
-    private double totalLoss = 0;
-    private int currentMonth;
-    private int currentYear;
+    private RodService rodService;
+    private BudgetService budgetService;
+    private ResearchService researchService;
 
-    private String rodName;
-    private int rodLevel;
-    private double lifeSpan;
-    private boolean isActive;
-    //private RodModelStyle Style;
-    //private List<RodModel> RodModelList = new ArrayList<RodModel>();
-    
-    public LoadSaveModel() {
+    private List<TechnologyModel> TechList = new ArrayList<TechnologyModel>();
+    public void setTechList(List<TechnologyModel> techList)
+    {
+        TechList = techList;
+    }
+    public List<TechnologyModel> getTechList()
+    {
+        return TechList;
     }
 
-    public double getBudget()
+    private List<RodModel> RodList = new ArrayList<RodModel>();
+    public void setRodList(List<RodModel> rodList)
     {
-        return budget;
+        RodList = rodList;
     }
-    public void setBudget(double budget)
+    public List<RodModel> getRodList()
     {
-        this.budget = budget;
-    }
-    
-    public double getSoldElectricity()
-    {
-        return soldElectricity;
-    }
-    public void setSoldElectricity(double soldElectricity)
-    {
-        this.soldElectricity = soldElectricity;
+        return RodList;
     }
 
-    public double getMiscellaneausIncome()
+    private List<BudgetModel> BudgetList = new ArrayList<BudgetModel>();
+    public void setBudgetList(List<BudgetModel> budgetList)
     {
-        return miscellaneausIncome;
+        BudgetList = budgetList;
     }
-    public void setMiscellaneausIncome(double miscellaneausIncome)
+    public List<BudgetModel> getBudgetList()
     {
-        this.miscellaneausIncome = miscellaneausIncome;
+        return BudgetList;
     }
-
-    public double getTotalIncome()
-    {
-        return totalIncome;
-    }
-    public void setTotalIncome(double totalIncome)
-    {
-        this.totalIncome = totalIncome;
-    }
-
-    public double getFuelRodPrice()
-    {
-        return fuelRodPrice;
-    }
-    public void setFuelRodPrice(double fuelRodPrice)
-    {
-        this.fuelRodPrice = fuelRodPrice;
-    }
-
-    public double getMaintenance()
-    {
-        return maintenance;
-    }
-    public void setMaintenance(double maintenance)
-    {
-        this.maintenance = maintenance;
-    }
-
-    public double getMiscellaneausLoss()
-    {
-        return miscellaneausLoss;
-    }
-    public void setMiscellaneausLoss(double miscellaneausLoss)
-    {
-        this.miscellaneausLoss = miscellaneausLoss;
-    }
-
-    public double getTotalLoss()
-    {
-        return totalLoss;
-    }
-    public void setTotalLoss(double totalLoss)
-    {
-        this.totalLoss = totalLoss;
-    }
-
+   
+    private int CurrentMonth;
     public int getCurrentMonth()
     {
-        return currentMonth;
+        return CurrentMonth;
     }
     public void setCurrentMonth(int currentMonth)
     {
-        this.currentMonth = currentMonth;
+        CurrentMonth = currentMonth;
     }
 
+    private int CurrentYear;
     public int getCurrentYear()
     {
-        return currentYear;
+        return CurrentYear;
     }
     public void setCurrentYear(int currentYear)
     {
-        this.currentYear = currentYear;
+        CurrentYear = currentYear;
+    }
+
+    private int CurrentDay;
+    public int getCurrentDay()
+    {
+        return CurrentDay;
+    }
+    public void setCurrentDay(int currentDay)
+    {
+        CurrentDay = currentDay;
+    }
+
+    public LoadSaveModel() 
+    {
+        rodService = RodService.GetInstance();
+        budgetService = BudgetService.GetInstance();   
+        researchService = ResearchService.GetInstance();
+
+        // for (var tech : researchService.GetTechList()) 
+        // {
+        //     TechList.add(tech);
+        // }
+        setTechList(researchService.GetTechList());
+
+        // for (var rod : rodService.GetRodList()) 
+        // {
+        //     RodList.add(rod);
+        // }
+        setRodList(rodService.GetRodList());
+        
+        // for (var budget : budgetService.GetBudgetList()) 
+        // {
+        //     BudgetList.add(budget);
+        // }
+        setBudgetList(budgetService.GetBudgetList());
     }
 
 
-    
-    public int getRodLevel()
-    {
-        return rodLevel;
-    }
-    public void setRodLevel(int rodLevel)
-    {
-        this.rodLevel = rodLevel;
-    }
 
-    public double getLifeSpan()
-    {
-        return lifeSpan;
-    }
-    public void setLifeSpan(double lifeSpan)
-    {
-        this.lifeSpan = lifeSpan;
-    }
-    
-    public String getRodName()
-    {
-        return rodName;
-    }
-    public void setRodName(String rodName)
-    {
-        this.rodName = rodName;
-    }
-
-    public boolean isIsActive()
-    {
-        return isActive;
-    }
-    public void setIsActive(boolean isActive)
-    {
-        this.isActive = isActive;
-    }
-
-    
-    // public RodModelStyle getStyle()
-    // {
-    //     return Style;
-    // }
-    // public void setStyle(RodModelStyle style)
-    // {
-    //     Style = style;
-    // }
-
-    
-    // public List<RodModel> getRodModelList()
-    // {
-    //     return RodModelList;
-    // }
-    // public void setRodModelList(List<RodModel> rodModelList)
-    // {
-    //     RodModelList = rodModelList;
-    // }
 }

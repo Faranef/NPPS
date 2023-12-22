@@ -60,16 +60,16 @@ public class ReactorService
             amount = temp * 3.67;
             //add income
             var income = (amount /100);
-            economyService.GetLastBudgetList().Budget += income;
-            economyService.GetLastBudgetList().SetSoldElectricity(income);
+            economyService.GetLastBudgetFromList().Increase(income);
+            economyService.GetLastBudgetFromList().SetSoldElectricity(income);
             
         }
         else if (temp >= 300)
         {
             amount = 1100;
             //add income
-            economyService.GetLastBudgetList().Budget += 11;
-            economyService.GetLastBudgetList().SetSoldElectricity(11);
+            economyService.GetLastBudgetFromList().Increase(11);
+            economyService.GetLastBudgetFromList().SetSoldElectricity(11);
         } 
 
         return (int)amount;

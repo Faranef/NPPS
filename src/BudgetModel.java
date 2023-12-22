@@ -1,24 +1,40 @@
-public class BudgetModel 
+import java.io.Serializable;
+
+public class BudgetModel  implements Serializable
 {
     public double Budget;
-    private double SoldElectricity = 0;
-    private double MiscellaneausIncome = 0;
-    private double TotalIncome = 0;
-    
-    private double FuelRodPrice = 0;
-    private double Maintenance = 0;
-    private double MiscellaneausLoss = 0;
-    private double TotalLoss = 0;
+    public double SoldElectricity;
+    public double TotalIncome;
 
-    private int CurrentMonth;
-    private int CurrentYear;
+    public double FuelRodPrice;
+    public double Maintenance;
+    public double ResearchCost;
+    
+    public double TotalLoss;
+    
+    public int CurrentMonth;
+    public int CurrentYear;
+    
+    public BudgetModel() 
+    {
+    }
+
+    public double GetResearchCost()
+    {
+        return ResearchCost;
+    }
+
+    public void SetResearchCost(double researchCost)
+    {
+        ResearchCost = researchCost;
+    }
     
     public double GetBudget()
     {
         return Budget;
     }
 
-    public void SetBudget(double budget)
+    public void Increase(double budget)
     {
         Budget += budget;
     }
@@ -56,38 +72,17 @@ public class BudgetModel
 
     public void SetMaintenance(double maintenance)
     {
-        Maintenance = maintenance;
+        Maintenance += maintenance;
     }
-
-    public double GetMiscellaneausLoss()
-    {
-        return MiscellaneausLoss;
-    }
-
-    public void SetMiscellaneausLoss(double miscellaneausLoss)
-    {
-        MiscellaneausLoss = miscellaneausLoss;
-    }
-
-    public double GetMiscellaneausIncome()
-    {
-        return MiscellaneausIncome;
-    }
-
-    public void SetMiscellaneausIncome(double miscellaneausIncome)
-    {
-        MiscellaneausIncome = miscellaneausIncome;
-    }
-
    
-    public double GetFuelRodPrice()
+    public double GetFuelRodTotalCost()
     {
         return FuelRodPrice;
     }
 
-    public void SetFuelRodPrice(double fuelRodPrice)
+    public void SetFuelRodTotalCost(double fuelRodPrice)
     {
-        FuelRodPrice = fuelRodPrice;
+        FuelRodPrice += fuelRodPrice;
     }
 
     public double GetTotalLoss()

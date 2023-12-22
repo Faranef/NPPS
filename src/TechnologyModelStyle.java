@@ -1,7 +1,7 @@
 
 public enum TechnologyModelStyle
 {
-    SaftyTech,
+    SafetyTech,
     FinaceTech,
     StartTech,
 }

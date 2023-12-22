@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.text.DecimalFormat;
 
 import javax.swing.*;
 
@@ -13,12 +14,14 @@ public class BudgetFrame extends JInternalFrame
 
     private JLabel budgetLabel;
     private JLabel soldElecLabel;
-    private JLabel totalLossLabel;
     private JLabel fuelRodPriceLabel;
+    private JLabel maintenance;
     private int currentTabIndex;
+    private DecimalFormat decimalFormat;
 
     public BudgetFrame() 
     {
+        decimalFormat = new DecimalFormat("#.##");
         GetServices();
         budgetList = budgetService.GetBudgetList();
         CreateFrame();
@@ -45,11 +48,12 @@ public class BudgetFrame extends JInternalFrame
     private void TimerAction(ActionEvent e)
     {
         //only update if current month is selected
-        var budgetModel = budgetList.get(currentTabIndex);
-        soldElecLabel.setText(Double.toString(budgetModel.GetSoldElectricity()));
-        totalLossLabel.setText(Double.toString(budgetModel.GetTotalLoss()));
-        fuelRodPriceLabel.setText(Double.toString(budgetModel.GetFuelRodPrice()));
-        budgetLabel.setText(Double.toString(budgetModel.Budget));
+        //var budgetModel = budgetList.get(currentTabIndex);
+        var budgetModel = budgetService.GetLastBudgetFromList();
+        soldElecLabel.setText(decimalFormat.format(budgetModel.GetSoldElectricity()));
+        fuelRodPriceLabel.setText(decimalFormat.format(budgetModel.GetFuelRodTotalCost()));
+        budgetLabel.setText(decimalFormat.format(budgetModel.GetBudget()));
+        maintenance.setText(decimalFormat.format(budgetModel.GetMaintenance()));
     }
 
     private void CreatePanels()
@@ -86,25 +90,33 @@ public class BudgetFrame extends JInternalFrame
         panel.setLayout(new GridLayout(0,3));
         panel.add(new Label("Income:"));
         panel.add(new Label("Electricity sold:"));
-        soldElecLabel = new JLabel(Double.toString(budgetModel.GetSoldElectricity()));
+        soldElecLabel = new JLabel(decimalFormat.format(budgetModel.GetSoldElectricity()));
         panel.add(soldElecLabel);
+
         panel.add(new Label());
         panel.add(new Label());
         panel.add(new Label());
+
         panel.add(new Label("Loss:"));
         panel.add(new Label("Running Costs:"));
-        totalLossLabel = new JLabel(Double.toString(budgetModel.GetTotalLoss()));
-        panel.add(totalLossLabel);
+        maintenance = new JLabel(decimalFormat.format(budgetModel.GetMaintenance()));
+        panel.add(maintenance);
+
+        panel.add(new Label());
+        panel.add(new Label("Research Cost:"));
+        fuelRodPriceLabel = new JLabel(decimalFormat.format(budgetModel.GetResearchCost()));
+        panel.add(fuelRodPriceLabel);
+
         panel.add(new Label());
         panel.add(new Label("Fuelrods:"));
-        fuelRodPriceLabel = new JLabel(Double.toString(budgetModel.GetFuelRodPrice()));
+        fuelRodPriceLabel = new JLabel(decimalFormat.format(budgetModel.GetFuelRodTotalCost()));
         panel.add(fuelRodPriceLabel);
         panel.add(new Label());
         panel.add(new Label());
         panel.add(new Label());
         panel.add(new Label("Total:"));
         panel.add(new Label());
-        budgetLabel = new JLabel(Double.toString(budgetModel.Budget));
+        budgetLabel = new JLabel(decimalFormat.format(budgetModel.GetBudget()));
         panel.add(budgetLabel);
 
         return panel;

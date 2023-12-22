@@ -2,8 +2,30 @@ import java.util.*;
 
 public class BudgetService 
 {
+    private double MaintenanceCost = 7.5;
+    private double FuelRodPrice  = 50_000;
     private static BudgetService Instance = null;
     private List<BudgetModel> BudgetList = new ArrayList<BudgetModel>();
+
+    public double GetMaintenanceCost()
+    {
+        return MaintenanceCost;
+    }
+
+    public void SetMaintenanceCost(double maintenanceCost)
+    {
+        MaintenanceCost = maintenanceCost;
+    }
+
+        public double GetFuelRodPrice()
+    {
+        return FuelRodPrice;
+    }
+
+    public void SetFuelRodPrice(double fuelRodPrice)
+    {
+        FuelRodPrice = fuelRodPrice;
+    }
 
     public List<BudgetModel> GetBudgetList()
     {
@@ -11,7 +33,7 @@ public class BudgetService
     }
 
     /// Gets the last inserted budget entry
-    public BudgetModel GetLastBudgetList()
+    public BudgetModel GetLastBudgetFromList()
     {
         return BudgetList.get(BudgetList.size()-1);
     }
@@ -25,10 +47,9 @@ public class BudgetService
     public void CreateBudgetModel(double currentBudget, int month, int year)
     {
         BudgetModel budgetModel = new BudgetModel();
-        budgetModel.SetBudget(currentBudget);
+        budgetModel.Increase(currentBudget);
         budgetModel.SetCurrentMonth(month + 1);
         budgetModel.SetCurrentYear(year);
-        budgetModel.SetFuelRodPrice(50000);
         BudgetList.add(budgetModel);
     }
 
@@ -37,6 +58,7 @@ public class BudgetService
         Calendar cal = Calendar.getInstance();
         var month = cal.get(Calendar.MONTH);
         var year = cal.get(Calendar.YEAR);
+
         CreateBudgetModel(100000.00,month,year);
     }
 

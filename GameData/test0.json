@@ -1,0 +1,209 @@
+{
+  "budgetList" : [ {
+    "Budget" : 99901.6932,
+    "SoldElectricity" : 194.1932,
+    "TotalIncome" : 0.0,
+    "FuelRodPrice" : 0.0,
+    "Maintenance" : 292.5,
+    "ResearchCost" : 0.0,
+    "TotalLoss" : 0.0,
+    "CurrentMonth" : 12,
+    "CurrentYear" : 2023
+  }, {
+    "Budget" : 100335.6932,
+    "SoldElectricity" : 1364.0,
+    "TotalIncome" : 0.0,
+    "FuelRodPrice" : 0.0,
+    "Maintenance" : 930.0,
+    "ResearchCost" : 0.0,
+    "TotalLoss" : 0.0,
+    "CurrentMonth" : 1,
+    "CurrentYear" : 2024
+  }, {
+    "Budget" : 100412.6932,
+    "SoldElectricity" : 242.0,
+    "TotalIncome" : 0.0,
+    "FuelRodPrice" : 0.0,
+    "Maintenance" : 165.0,
+    "ResearchCost" : 0.0,
+    "TotalLoss" : 0.0,
+    "CurrentMonth" : 2,
+    "CurrentYear" : 2024
+  } ],
+  "currentMonth" : 2,
+  "techList" : [ {
+    "DependingTechnology" : null,
+    "ResearchCost" : 1000.0,
+    "IsResearched" : false,
+    "ResearchName" : "Research",
+    "ResearchDescription" : "Enables research and development.",
+    "LogoPath" : "./Images/tech00.png",
+    "LogoPathFinished" : "./Images/finishedTech00.png",
+    "TechnologyStyle" : "StartTech",
+    "TechId" : 0,
+    "Effects" : "",
+    "ImagePath" : ""
+  }, {
+    "DependingTechnology" : [ {
+      "DependingTechnology" : null,
+      "ResearchCost" : 1000.0,
+      "IsResearched" : false,
+      "ResearchName" : "Research",
+      "ResearchDescription" : "Enables research and development.",
+      "LogoPath" : "./Images/tech00.png",
+      "LogoPathFinished" : "./Images/finishedTech00.png",
+      "TechnologyStyle" : "StartTech",
+      "TechId" : 0,
+      "Effects" : "",
+      "ImagePath" : ""
+    } ],
+    "ResearchCost" : 10000.0,
+    "IsResearched" : false,
+    "ResearchName" : "Stronger case",
+    "ResearchDescription" : "Unlocks a stronger case.",
+    "LogoPath" : "./Images/tech01.png",
+    "LogoPathFinished" : "./Images/finishedTech01.png",
+    "TechnologyStyle" : "SafetyTech",
+    "TechId" : 1,
+    "Effects" : "Reactor",
+    "ImagePath" : "./Images/caseUpgrade0.png"
+  }, {
+    "DependingTechnology" : [ {
+      "DependingTechnology" : null,
+      "ResearchCost" : 1000.0,
+      "IsResearched" : false,
+      "ResearchName" : "Research",
+      "ResearchDescription" : "Enables research and development.",
+      "LogoPath" : "./Images/tech00.png",
+      "LogoPathFinished" : "./Images/finishedTech00.png",
+      "TechnologyStyle" : "StartTech",
+      "TechId" : 0,
+      "Effects" : "",
+      "ImagePath" : ""
+    }, {
+      "DependingTechnology" : [ {
+        "DependingTechnology" : null,
+        "ResearchCost" : 1000.0,
+        "IsResearched" : false,
+        "ResearchName" : "Research",
+        "ResearchDescription" : "Enables research and development.",
+        "LogoPath" : "./Images/tech00.png",
+        "LogoPathFinished" : "./Images/finishedTech00.png",
+        "TechnologyStyle" : "StartTech",
+        "TechId" : 0,
+        "Effects" : "",
+        "ImagePath" : ""
+      } ],
+      "ResearchCost" : 10000.0,
+      "IsResearched" : false,
+      "ResearchName" : "Stronger case",
+      "ResearchDescription" : "Unlocks a stronger case.",
+      "LogoPath" : "./Images/tech01.png",
+      "LogoPathFinished" : "./Images/finishedTech01.png",
+      "TechnologyStyle" : "SafetyTech",
+      "TechId" : 1,
+      "Effects" : "Reactor",
+      "ImagePath" : "./Images/caseUpgrade0.png"
+    } ],
+    "ResearchCost" : 25000.0,
+    "IsResearched" : false,
+    "ResearchName" : "Even stronger case",
+    "ResearchDescription" : "Unlocks an even stronger case.",
+    "LogoPath" : "./Images/tech02.png",
+    "LogoPathFinished" : "./Images/finishedTech02.png",
+    "TechnologyStyle" : "SafetyTech",
+    "TechId" : 2,
+    "Effects" : "Reactor",
+    "ImagePath" : "./Images/caseUpgrade1.png"
+  }, {
+    "DependingTechnology" : [ {
+      "DependingTechnology" : null,
+      "ResearchCost" : 1000.0,
+      "IsResearched" : false,
+      "ResearchName" : "Research",
+      "ResearchDescription" : "Enables research and development.",
+      "LogoPath" : "./Images/tech00.png",
+      "LogoPathFinished" : "./Images/finishedTech00.png",
+      "TechnologyStyle" : "StartTech",
+      "TechId" : 0,
+      "Effects" : "",
+      "ImagePath" : ""
+    } ],
+    "ResearchCost" : 1000000.0,
+    "IsResearched" : false,
+    "ResearchName" : "Decrease costs",
+    "ResearchDescription" : "Unlocks the possibility to reduce maintenance cost.",
+    "LogoPath" : "./Images/tech03.png",
+    "LogoPathFinished" : "./Images/finishedTech03.png",
+    "TechnologyStyle" : "FinaceTech",
+    "TechId" : 3,
+    "Effects" : "",
+    "ImagePath" : ""
+  } ],
+  "currentYear" : 2024,
+  "rodList" : [ {
+    "RodLevel" : 50,
+    "LifeSpan" : 0.0,
+    "RodName" : "Control Rod",
+    "IsActive" : false,
+    "Style" : "ControlRod",
+    "RodModelList" : [ ]
+  }, {
+    "RodLevel" : 0,
+    "LifeSpan" : 0.0,
+    "RodName" : "Fuel Rod",
+    "IsActive" : false,
+    "Style" : "FuelRod",
+    "RodModelList" : [ {
+      "RodLevel" : 100,
+      "LifeSpan" : 83057.75,
+      "RodName" : "1",
+      "IsActive" : true,
+      "Style" : "FuelRod",
+      "RodModelList" : [ ]
+    }, {
+      "RodLevel" : 100,
+      "LifeSpan" : 83358.5,
+      "RodName" : "2",
+      "IsActive" : true,
+      "Style" : "FuelRod",
+      "RodModelList" : [ ]
+    }, {
+      "RodLevel" : 100,
+      "LifeSpan" : 83559.0,
+      "RodName" : "3",
+      "IsActive" : true,
+      "Style" : "FuelRod",
+      "RodModelList" : [ ]
+    }, {
+      "RodLevel" : 0,
+      "LifeSpan" : 100000.0,
+      "RodName" : "4",
+      "IsActive" : true,
+      "Style" : "FuelRod",
+      "RodModelList" : [ ]
+    }, {
+      "RodLevel" : 0,
+      "LifeSpan" : 100000.0,
+      "RodName" : "5",
+      "IsActive" : true,
+      "Style" : "FuelRod",
+      "RodModelList" : [ ]
+    }, {
+      "RodLevel" : 0,
+      "LifeSpan" : 100000.0,
+      "RodName" : "6",
+      "IsActive" : true,
+      "Style" : "FuelRod",
+      "RodModelList" : [ ]
+    } ]
+  }, {
+    "RodLevel" : 0,
+    "LifeSpan" : 0.0,
+    "RodName" : "Moderator",
+    "IsActive" : false,
+    "Style" : "Moderator",
+    "RodModelList" : [ ]
+  } ],
+  "currentDay" : 6
+}

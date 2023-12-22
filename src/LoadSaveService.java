@@ -1,14 +1,20 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class LoadSaveService 
 {
     private static LoadSaveService Instance;
     private RodService rodService;
     private BudgetService budgetService;
-    private ReactorService reactorService;
+    private ResearchService researchService;
 
     public static LoadSaveService GetInstance()
     {
@@ -24,19 +30,18 @@ public class LoadSaveService
     {
         rodService = RodService.GetInstance();
         budgetService = BudgetService.GetInstance();   
-        reactorService = ReactorService.GetInstance();
+        researchService = ResearchService.GetInstance();
     }
 
-    public LoadSaveModel LoadGame()
+    public LoadSaveModel LoadGame(File file)
     {
         LoadSaveModel loadModel = null;
 
         try 
         {
             ObjectMapper mapper = new ObjectMapper();
-            LoadSaveModel loadModels = mapper.readValue(new File("F:\\UNI\\GUI\\Project\\NPPS\\GameData\\saveFile.json"), LoadSaveModel.class);
+            LoadSaveModel loadModels = mapper.readValue(file, LoadSaveModel.class);
 
-            System.out.println(loadModels.getBudget());
         } 
         catch (Exception e) 
         {
@@ -47,19 +52,33 @@ public class LoadSaveService
         return loadModel;
     }
 
-    public void SaveGame(LoadSaveModel saveModel, String fileName)
+    public void SaveGame(File file, Date gameDate)
     {
         try 
         {
-            String pathName = "./GameDate/"+fileName+".json";
+            var saveModel = CreateSaveModel(gameDate);
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(new File(pathName), saveModel);
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+            objectMapper.writeValue(file, saveModel);
         } 
         catch (IOException e) 
         {
+            e.printStackTrace();
         }
+    }
 
+    private LoadSaveModel CreateSaveModel(Date gameDate)
+    {
+        LoadSaveModel loadSaveModel = new LoadSaveModel();
+        
+        Calendar c = Calendar.getInstance(); 
+        c.setTime(gameDate); 
+        loadSaveModel.setCurrentDay(c.get(Calendar.DAY_OF_MONTH));
+        loadSaveModel.setCurrentMonth(c.get(Calendar.MONTH)+1);
+        loadSaveModel.setCurrentYear( c.get(Calendar.YEAR));
 
+        return loadSaveModel;
     }
 
 }
